@@ -45,19 +45,15 @@
   .mark{display:block;height:26px;width:auto;opacity:.96}
   .rule{height:1px;background:linear-gradient(90deg,var(--hair),transparent);margin:22px 0 20px}
   .kicker{
-    font-size:.78rem;color:var(--silver-3);
-    letter-spacing:.24em;margin:0 0 12px;
+    font-size:.84rem;color:var(--silver-3);
+    letter-spacing:.22em;margin:0 0 12px;
   }
   h1{
     margin:0 0 12px;
     font-size:clamp(1.65rem,5.8vw,2.1rem);
     font-weight:300;line-height:1.3;letter-spacing:-0.03em;
   }
-  header .lede{
-    margin:0;color:var(--silver-2);
-    font-size:clamp(.78rem,3.4vw,.94rem);
-    white-space:nowrap;
-  }
+  header .lede{margin:0;color:var(--silver-2);font-size:.94rem;white-space:nowrap}
 
   /* ---------- search ---------- */
   .search{display:flex;gap:8px;margin-top:28px}
@@ -81,7 +77,7 @@
   }
   .go:hover{background:var(--silver)}
   .go:focus-visible{outline:2px solid var(--white);outline-offset:3px}
-  .hint{margin:12px 2px 0;font-size:clamp(.72rem,3.05vw,.84rem);color:var(--silver-3)}
+  .hint{margin:12px 2px 0;font-size:.86rem;color:var(--silver-3)}
 
   /* ---------- result ---------- */
   #result:empty{display:none}
@@ -97,8 +93,8 @@
   .who{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
   .who strong{font-size:1.15rem;font-weight:600;letter-spacing:-0.02em}
   .alias{
-    font-size:.8rem;color:var(--silver);
-    border:1px solid var(--hair);padding:2px 10px;border-radius:999px;
+    font-size:.82rem;color:var(--silver);
+    border:1px solid var(--hair);padding:3px 10px;border-radius:999px;
   }
   .when{margin-top:20px;display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
   .date{
@@ -112,7 +108,7 @@
     -webkit-background-clip:text;background-clip:text;color:transparent;
   }
   .dday{
-    display:inline-block;margin-top:14px;font-size:.8rem;color:var(--silver-2);
+    display:inline-block;margin-top:14px;font-size:.82rem;color:var(--silver-2);
     border:1px solid var(--hair);border-radius:999px;padding:3px 12px;
   }
   .dday.past{color:var(--silver-3)}
@@ -125,8 +121,9 @@
   .row .v .sub{color:var(--silver-2);font-size:.88rem;margin-top:2px}
   .acts{display:flex;gap:8px;margin-top:13px;flex-wrap:wrap}
   .ghost{
-    padding:9px 15px;background:transparent;border:1px solid var(--hair);
-    color:var(--silver);font-size:.86rem;text-decoration:none;display:inline-block;
+    padding:11px 15px;min-height:44px;background:transparent;border:1px solid var(--hair);
+    color:var(--silver);font-size:.88rem;text-decoration:none;
+    display:inline-flex;align-items:center;justify-content:center;
     transition:border-color .15s ease,color .15s ease;
   }
   .ghost:hover{border-color:var(--silver-2);color:var(--white)}
@@ -166,7 +163,7 @@
   .modal-head .kicker{margin:0 0 7px}
   .modal-head h2{font-size:1.2rem;font-weight:600;margin:0;letter-spacing:-0.025em}
   .x{
-    flex:0 0 auto;width:32px;height:32px;line-height:1;font-size:1.05rem;
+    flex:0 0 auto;width:38px;height:38px;line-height:1;font-size:1.05rem;
     background:transparent;border:1px solid var(--hair);color:var(--silver);
     transition:border-color .15s ease,color .15s ease;
   }
@@ -249,7 +246,14 @@
   .faq .a{padding:0 6px 18px 0;font-size:.9rem;color:var(--silver-2);line-height:1.72}
   .faq .a p{margin:0 0 9px}
   .faq .a p:last-child{margin-bottom:0}
-  .faq .a a{color:var(--white);text-decoration:underline;text-underline-offset:3px}
+  .faq .a a{
+    color:var(--white);text-decoration:underline;text-underline-offset:3px;
+    padding:5px 2px;margin:-5px -2px;
+  }
+  .faq .a a.ghost{
+    margin:5px 0 0;padding:11px 15px;text-decoration:none;
+    color:var(--silver);
+  }
   @media (prefers-reduced-motion:reduce){.faq summary:after{transition:none}}
 
   /* ---------- pending (no schedule yet) ---------- */
@@ -303,6 +307,26 @@
   .pick button:focus-visible{outline:2px solid var(--silver);outline-offset:2px}
   .pick button span{color:var(--silver-3);font-size:.86rem;margin-left:6px}
 
+  /* ---------- narrow screens ---------- */
+  @media (max-width:400px){
+    body{padding:0 16px 60px}
+    header{padding:48px 0 30px}
+    .card-top{padding-left:18px;padding-right:18px}
+    .card-body,.sec{padding-left:18px;padding-right:18px}
+    .miss{padding-left:18px;padding-right:18px}
+    /* stack label over value so the value gets the full width */
+    .row{flex-direction:column;gap:4px}
+    .row .k{flex:0 0 auto}
+    .go{padding:0 18px}
+    .modal{width:calc(100vw - 20px)}
+    .modal-head{padding:18px 18px 15px}
+    .modal-body{padding:20px 18px 24px}
+    .modal-foot{padding:13px 18px}
+    .b-def{padding:16px}
+    .b-star{padding:17px 16px}
+    .b-list li{padding-left:34px}
+  }
+
   /* ---------- bottom contact ---------- */
   .contact{
     max-width:var(--maxw);margin:52px auto 0;
@@ -330,7 +354,7 @@
 
   footer{
     max-width:var(--maxw);margin:36px auto 0;text-align:center;
-    color:var(--silver-3);font-size:.75rem;letter-spacing:.2em;
+    color:var(--silver-3);font-size:.78rem;letter-spacing:.2em;
   }
   .toast{
     position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(12px);
@@ -350,12 +374,12 @@
     <div class="rule"></div>
     <p class="kicker">2차 지사 면접</p>
     <h1>면접 일정 조회</h1>
-    <p class="lede">배정된 면접 일시와 장소를 확인하실 수 있습니다.</p>
+    <p class="lede">배정된 면접 일시와 장소를 확인하세요.</p>
 
     <div class="search">
       <div class="field">
         <label for="q" class="sr">성함 혹은 활동명</label>
-        <input id="q" type="text" placeholder="성함 혹은 활동명을 입력해주세요" autocomplete="off" spellcheck="false" enterkeyhint="search">
+        <input id="q" type="text" placeholder="성함 혹은 활동명" autocomplete="off" spellcheck="false" enterkeyhint="search">
       </div>
       <button class="go" id="go">조회</button>
     </div>
@@ -516,7 +540,7 @@ const FAQ_BOOKED = [
   ["오시는 길이 어떻게 되나요?", `
     <p>지하철 <strong>1호선 · 7호선 가산디지털단지역</strong>에서 오시면 됩니다. <strong>8번 출구</strong>에서 약 361m 거리입니다.</p>
     <p>건물에 도착하시면 <strong>고층부 엘리베이터</strong>를 이용해 11층으로 올라와 주세요.</p>
-    <p><a href="${MAP_URL}" target="_blank" rel="noopener">지도에서 위치 보기</a></p>`],
+    <p><a class="ghost" href="${MAP_URL}" target="_blank" rel="noopener">지도에서 위치 보기</a></p>`],
   ["주차할 수 있나요?", `
     <p>주차 가능합니다. 차량으로 오셔도 괜찮습니다.</p>`],
   ...FAQ_KIT
