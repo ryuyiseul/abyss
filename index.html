@@ -480,6 +480,8 @@ const ADDRESS = "서울특별시 금천구 가산디지털2로 108";
 const PLACE   = "뉴T캐슬 11층 1101호 (성현시스템)";
 const KAKAO   = "https://open.kakao.com/o/ssFViPZg";
 const MAP_URL = "https://naver.me/5yPiqrom";
+// 조회 기록을 남길 구글 Apps Script 웹앱 URL. 비워두면 아무것도 기록하지 않습니다.
+const LOG_URL = "";
 
 const SLOT_DATES = ["9월 10일 목", "9월 11일 금", "9월 17일 목", "9월 18일 금"];
 const SLOT_TIMES = ["오후 1시", "오후 2시", "오후 3시", "오후 4시", "오후 5시", "오후 6시"];
@@ -696,7 +698,35 @@ function pickHTML(list){
 
 let candidates = [];
 function render(html){ $("#result").innerHTML = html; bind(); }
-function renderPerson(p){ render(p.pending ? pendingHTML(p) : cardHTML(p)); }
+// 조회 기록. 실패해도 조회 자체는 절대 막지 않는다.
+function logView(p){
+  if (!LOG_URL) return;
+  try {
+    const key = "abyss-logged:" + p.name;
+    if (sessionStorage.getItem(key)) return;   // 같은 방문 중 중복 기록 방지
+    sessionStorage.setItem(key, "1");
+  } catch (e) { /* 저장소가 막힌 환경에서도 기록은 시도한다 */ }
+  try {
+    const body = JSON.stringify({
+      name: p.name,
+      alias: p.alias || "",
+      at: new Date().toISOString()
+    });
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon(LOG_URL, new Blob([body], { type: "text/plain;charset=UTF-8" }));
+    } else {
+      fetch(LOG_URL, {
+        method: "POST", mode: "no-cors", keepalive: true,
+        headers: { "Content-Type": "text/plain;charset=UTF-8" }, body
+      });
+    }
+  } catch (e) { /* 기록 실패는 조용히 넘어간다 */ }
+}
+
+function renderPerson(p){
+  logView(p);
+  render(p.pending ? pendingHTML(p) : cardHTML(p));
+}
 
 function bind(){
   const copy = $("#copy");
