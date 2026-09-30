@@ -306,14 +306,14 @@
   .taken details{border:1px solid var(--hair);border-radius:2px;background:var(--panel-2)}
   .taken summary{
     list-style:none;cursor:pointer;position:relative;
-    padding:14px 36px 14px 15px;font-size:.9rem;color:var(--silver);
+    padding:14px 36px 14px 15px;font-size:.92rem;color:var(--white);font-weight:600;
     transition:color .15s ease;
   }
   .taken summary::-webkit-details-marker{display:none}
   .taken summary::marker{content:""}
   .taken summary:hover{color:var(--white)}
   .taken summary:focus-visible{outline:2px solid var(--silver);outline-offset:2px}
-  .taken summary .cnt{color:var(--silver-3);margin-left:6px}
+  .taken summary .cnt{color:var(--silver-2);margin-left:6px;font-weight:400}
   .taken summary:after{
     content:"";position:absolute;right:15px;top:50%;width:7px;height:7px;
     border-right:1px solid var(--silver-2);border-bottom:1px solid var(--silver-2);
@@ -322,8 +322,11 @@
   .taken details[open] summary{color:var(--white);border-bottom:1px solid var(--hair-soft)}
   .taken details[open] summary:after{transform:translateY(-25%) rotate(-135deg)}
   .taken .body{padding:14px 15px}
-  .taken .tl{font-size:.86rem;color:var(--silver-3);margin:0 0 10px;line-height:1.6}
-  .taken .eg{color:var(--silver-3);text-decoration:line-through;text-decoration-color:var(--hair)}
+  .taken .tl{font-size:.88rem;color:var(--silver-2);margin:0 0 10px;line-height:1.6}
+  .taken .eg{
+    color:var(--silver);border-color:var(--silver-3);
+    text-decoration:line-through;text-decoration-color:var(--silver-3);
+  }
   @media (prefers-reduced-motion:reduce){.taken summary:after{transition:none}}
   .preview.dup{border-color:#8C5350}
   .preview .val.dup{color:#D79A97}
@@ -365,6 +368,37 @@
   .submit:disabled{opacity:.5;cursor:default}
   .submit:focus-visible{outline:2px solid var(--white);outline-offset:3px}
   .formnote{margin:11px 0 0;font-size:.84rem;color:var(--silver-3);line-height:1.6;text-align:center}
+
+  .confirm{max-height:min(80vh,680px)}
+  .confirm .modal-body{padding:22px}
+  .cwarn{margin:0 0 16px;font-size:.93rem;color:var(--silver);line-height:1.72}
+  .cwarn b{color:var(--white);font-weight:600}
+  .cpair{border-top:1px solid var(--hair-soft);margin-bottom:16px}
+  .cpair div{
+    display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--hair-soft);font-size:.93rem;
+  }
+  .cpair .k{flex:0 0 108px;color:var(--silver-3);font-size:.86rem}
+  .cpair .v{flex:1;min-width:0;color:var(--white);font-weight:600;word-break:break-all}
+  .crule{
+    padding:15px 16px;background:var(--panel-2);border-radius:3px;
+    font-size:.9rem;color:var(--silver-2);line-height:1.72;margin-bottom:18px;
+  }
+  .crule b{color:var(--white);font-weight:600}
+  .ack{
+    display:flex;gap:11px;align-items:flex-start;cursor:pointer;
+    padding:15px;border:1px solid var(--hair);border-radius:3px;
+    font-size:.92rem;color:var(--white);line-height:1.6;
+  }
+  .ack:hover{border-color:var(--silver-2)}
+  .ack input{
+    flex:0 0 auto;width:20px;height:20px;margin:1px 0 0;accent-color:#fff;cursor:pointer;
+  }
+  .modal-foot.two{display:flex;gap:9px}
+  .modal-foot.two button{flex:1}
+  .modal-foot.two .ghostbtn{
+    background:transparent;border:1px solid var(--hair);color:var(--silver);font-weight:400;
+  }
+  .modal-foot.two .ghostbtn:hover{background:transparent;border-color:var(--silver-2);color:var(--white)}
 
   .done{padding:4px 0 0}
   .done .ok{
@@ -563,6 +597,33 @@
 
 <footer>ABYSS</footer>
 <div class="toast" id="toast">주소를 복사했습니다</div>
+
+<dialog class="modal confirm" id="bizwarn" aria-labelledby="bizwarn-title">
+  <div class="modal-head">
+    <div>
+      <p class="kicker">확인 필요</p>
+      <h2 id="bizwarn-title">지역이 서로 다릅니다</h2>
+    </div>
+  </div>
+  <div class="modal-body">
+    <p class="cwarn">입력하신 <b>사업자등록 예정지</b>와 <b>지사명의 지역</b>이 달라 보입니다.</p>
+    <div class="cpair">
+      <div><span class="k">지사명</span><span class="v" id="bw-branch"></span></div>
+      <div><span class="k">사업자등록 예정지</span><span class="v" id="bw-biz"></span></div>
+    </div>
+    <div class="crule">
+      지사가 되시면 사업자등록을 함께 진행하게 됩니다. <b>사업자등록지와 지사명의 지역은 같거나 가까워야 합니다.</b> 예를 들어 사업자등록을 노원에 하시면서 지사명을 마곡으로 정하실 수는 없습니다.
+    </div>
+    <label class="ack" for="bw-ck">
+      <input type="checkbox" id="bw-ck">
+      <span>위 내용을 숙지했으며, 사업자등록 예정지와 지사 지역의 거리를 반영해 정했음을 확인합니다.</span>
+    </label>
+  </div>
+  <div class="modal-foot two">
+    <button type="button" class="ghostbtn" id="bw-cancel">수정하기</button>
+    <button type="button" id="bw-ok" disabled>확인하고 제출</button>
+  </div>
+</dialog>
 
 <dialog class="modal" id="benefits" aria-labelledby="benefits-title">
   <div class="modal-head">
@@ -773,6 +834,17 @@ function setApplied(p, d){
   try { localStorage.setItem(appliedKey(p), JSON.stringify(d)); } catch (e) {}
 }
 
+// 사업자등록 예정지에 세부지역(없으면 지역)이 들어있지 않으면 확인을 받는다.
+// 구/동/역 같은 접미사는 붙어 있어도 포함 검사로 걸러진다.
+function bizMismatch(region, detail, biz){
+  const b = normBranch(biz);
+  if (!b) return false;
+  const d = normBranch(detail), r = normBranch(region);
+  if (d && b.includes(d)) return false;
+  if (!d && r && b.includes(r)) return false;
+  return true;
+}
+
 function branchName(region, detail){
   region = (region || "").trim();
   detail = (detail || "").trim();
@@ -918,6 +990,45 @@ function jsonp(url, params, ms){
   });
 }
 
+// 지역이 어긋나면 확인 팝업을 띄우고, 체크 후 "확인하고 제출"을 눌러야 통과시킨다.
+function confirmBiz(branch, biz){
+  const box = $("#bizwarn");
+  return new Promise(resolve => {
+    const ck = $("#bw-ck"), ok = $("#bw-ok"), cancel = $("#bw-cancel");
+    $("#bw-branch").textContent = branch;
+    $("#bw-biz").textContent = biz;
+    ck.checked = false;
+    ok.disabled = true;
+
+    let settled = false;
+    function finish(v){
+      if (settled) return;
+      settled = true;
+      ck.removeEventListener("change", onCk);
+      ok.removeEventListener("click", onOk);
+      cancel.removeEventListener("click", onCancel);
+      box.removeEventListener("close", onClose);
+      if (box.open){ if (typeof box.close === "function") box.close(); else box.removeAttribute("open"); }
+      document.body.style.overflow = "";
+      resolve(v);
+    }
+    const onCk = () => { ok.disabled = !ck.checked; };
+    const onOk = () => finish(true);
+    const onCancel = () => finish(false);
+    const onClose = () => finish(false);
+
+    ck.addEventListener("change", onCk);
+    ok.addEventListener("click", onOk);
+    cancel.addEventListener("click", onCancel);
+    box.addEventListener("close", onClose);
+
+    if (typeof box.showModal === "function") box.showModal();
+    else box.setAttribute("open", "");
+    document.body.style.overflow = "hidden";
+    box.querySelector(".modal-body").scrollTop = 0;
+  });
+}
+
 function fmtPhone(v){
   const n = (v || "").replace(/\D/g, "").slice(0, 11);
   if (n.length < 4) return n;
@@ -995,6 +1106,11 @@ function bindForm(p){
       bad = bad || biz;
     }
     if (bad){ bad.focus(); return; }
+
+    if (bizMismatch(rg, dt, bz)){
+      const proceed = await confirmBiz(branch, bz);
+      if (!proceed){ biz.focus(); return; }
+    }
 
     go.disabled = true;
     const label = go.textContent;
