@@ -303,8 +303,28 @@
   .cmp .r.no .d .top{color:var(--silver-2);text-decoration:line-through;text-decoration-color:var(--silver-3)}
 
   .taken{margin-top:14px}
-  .taken .tl{font-size:.84rem;color:var(--silver-3);margin:0 0 8px}
+  .taken details{border:1px solid var(--hair);border-radius:2px;background:var(--panel-2)}
+  .taken summary{
+    list-style:none;cursor:pointer;position:relative;
+    padding:14px 36px 14px 15px;font-size:.9rem;color:var(--silver);
+    transition:color .15s ease;
+  }
+  .taken summary::-webkit-details-marker{display:none}
+  .taken summary::marker{content:""}
+  .taken summary:hover{color:var(--white)}
+  .taken summary:focus-visible{outline:2px solid var(--silver);outline-offset:2px}
+  .taken summary .cnt{color:var(--silver-3);margin-left:6px}
+  .taken summary:after{
+    content:"";position:absolute;right:15px;top:50%;width:7px;height:7px;
+    border-right:1px solid var(--silver-2);border-bottom:1px solid var(--silver-2);
+    transform:translateY(-75%) rotate(45deg);transition:transform .18s ease;
+  }
+  .taken details[open] summary{color:var(--white);border-bottom:1px solid var(--hair-soft)}
+  .taken details[open] summary:after{transform:translateY(-25%) rotate(-135deg)}
+  .taken .body{padding:14px 15px}
+  .taken .tl{font-size:.86rem;color:var(--silver-3);margin:0 0 10px;line-height:1.6}
   .taken .eg{color:var(--silver-3);text-decoration:line-through;text-decoration-color:var(--hair)}
+  @media (prefers-reduced-motion:reduce){.taken summary:after{transition:none}}
   .preview.dup{border-color:#8C5350}
   .preview .val.dup{color:#D79A97}
   .dupmsg{margin:8px 0 0;font-size:.86rem;color:#D79A97;line-height:1.6}
@@ -733,9 +753,15 @@ function paintTaken(){
   const wrap = $("#taken-wrap");
   if (!wrap) return;
   if (!takenList || !takenList.length){ wrap.innerHTML = ""; return; }
+  const open = wrap.querySelector("details") && wrap.querySelector("details").open;
   wrap.innerHTML = `
-    <p class="tl">이미 사용 중인 지사명입니다. 아래 이름은 선택하실 수 없습니다.</p>
-    <div class="egs">${takenList.map(t => `<span class="eg">${esc(t)}</span>`).join("")}</div>`;
+    <details${open ? " open" : ""}>
+      <summary>현재 있는 지사 확인하기<span class="cnt">${takenList.length}곳</span></summary>
+      <div class="body">
+        <p class="tl">아래 지사명은 이미 사용 중이라 선택하실 수 없습니다.</p>
+        <div class="egs">${takenList.map(t => `<span class="eg">${esc(t)}</span>`).join("")}</div>
+      </div>
+    </details>`;
 }
 
 function appliedKey(p){ return "abyss-branch:" + p.name; }
@@ -1031,6 +1057,11 @@ function syncPreview(){
   }
   const go = $("#f-go");
   if (go) go.disabled = dup;
+
+  if (dup){
+    const det = document.querySelector("#taken-wrap details");
+    if (det) det.open = true;
+  }
 }
 
 function benefitBarHTML(){
