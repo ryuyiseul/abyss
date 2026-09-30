@@ -748,7 +748,7 @@ const PLACE   = "뉴T캐슬 11층 1101호 (성현시스템)";
 const KAKAO   = "https://open.kakao.com/o/ssFViPZg";
 const MAP_URL = "https://naver.me/5yPiqrom";
 // 조회 기록을 남길 구글 Apps Script 웹앱 URL. 비워두면 아무것도 기록하지 않습니다.
-const LOG_URL = "https://script.google.com/macros/s/AKfycbzLVYx49o__NO_Wc4IZ7umRBF9PXkkT_q_SI-U1NrRTjmK8U7gbgp6Va8miulH2Gl7y/exec";
+const LOG_URL = "https://script.google.com/macros/s/AKfycbz3DOczQyt-u_HhVoPQIhhmGfY1fFjC8Uo9flHY7zjfvOr3wUyN7TKljD_sgdDNqWDk/exec";
 
 // 명단은 관리자 페이지에서 관리하며 서버(Apps Script)에서 받아옵니다.
 // 서버를 못 받아와도 조회가 멈추지 않도록, 아래 명단을 예비로 둡니다.
@@ -1317,7 +1317,9 @@ async function loadRoster(){
   try {
     const r = await jsonp(LOG_URL, { type: "roster" }, 15000);
     if (!r || !Array.isArray(r.people)) throw new Error("bad");
-    DATA = r.people;
+    // 명단 탭이 비어 있으면 빈 배열이 온다. 그걸로 덮어쓰면 아무도 조회되지 않으므로
+    // 내용이 있을 때만 교체한다.
+    if (r.people.length) DATA = r.people;
     rosterState = "ready";
     if (go){ go.disabled = false; go.textContent = "조회"; }
     if (hint) hint.textContent = base;
