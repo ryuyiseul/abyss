@@ -607,6 +607,43 @@
   }
   .addbtn:hover{border-color:var(--ink3);color:var(--ink);background:var(--soft)}
 
+  /* 선택 · 일괄 */
+  .ck{flex:0 0 auto;width:18px;height:18px;accent-color:#16181B;cursor:pointer;margin:0}
+  .selall{
+    display:flex;align-items:center;gap:8px;padding:0 6px 0 2px;
+    font-size:.86rem;color:var(--ink2);cursor:pointer;white-space:nowrap;
+  }
+  .selbar{
+    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    padding:11px 14px;margin-bottom:12px;border-radius:5px;
+    background:var(--ink);color:#fff;font-size:.9rem;
+  }
+  .selbar .sp{flex:1}
+  .selbar button{
+    padding:7px 13px;font-size:.85rem;border-radius:4px;border:none;
+    background:#fff;color:var(--ink);font-weight:700;
+  }
+  .selbar button:hover{background:#E9EAEC}
+  .selbar button.g2{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4);font-weight:400}
+  .selbar button.g2:hover{background:rgba(255,255,255,.12)}
+
+  .bulkta{
+    width:100%;min-height:160px;padding:12px 13px;font:inherit;font-size:.9rem;line-height:1.7;
+    background:var(--bg);border:1px solid var(--line);border-radius:4px;color:var(--ink);resize:vertical;
+  }
+  .bulkta:focus{outline:none;border-color:var(--ink3)}
+  .prev{margin-top:12px;border:1px solid var(--line2);border-radius:4px;max-height:230px;overflow-y:auto}
+  .prev > div{
+    display:flex;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line2);font-size:.88rem;
+  }
+  .prev > div:last-child{border-bottom:none}
+  .prev .i{flex:0 0 24px;color:var(--ink3)}
+  .prev .n{flex:0 0 auto;font-weight:700}
+  .prev .rest{flex:1;min-width:0;color:var(--ink2)}
+  .prev .dup{color:var(--no)}
+  .twobtn{display:flex;gap:8px;margin-bottom:18px}
+  .twobtn .addbtn{margin-bottom:0}
+
   /* 제출 내역 · 조회 현황 */
   .sub{padding:15px 2px;border-bottom:1px solid var(--line2)}
   .sub:hover{background:var(--soft)}
@@ -1590,6 +1627,7 @@ let adminTab = "people";
 let editing = null;                 // null | "new" | row 번호
 let aQuery = "";
 let aFilter = "전체";
+let selected = new Set();
 const STATUSES = ["합격", "불합격", "대기"];
 
 function adminPw(){ try { return sessionStorage.getItem("abyss-adm") || ""; } catch (e) { return ""; } }
@@ -1653,6 +1691,7 @@ function statsHTML(){
 function toolsHTML(){
   const chip = v => `<button type="button" class="chipf${aFilter === v ? " on" : ""}" data-f="${v}">${v}</button>`;
   return `<div class="tools">
+    <label class="selall"><input type="checkbox" class="ck" id="selall"> 전체 선택</label>
     <input id="asearch" type="text" placeholder="이름 또는 활동명 검색" value="${esc(aQuery)}" autocomplete="off">
     <div class="chips">${["전체"].concat(STATUSES).map(chip).join("")}</div>
   </div>`;
@@ -1672,6 +1711,7 @@ function listHTML(){
   if (!list.length) return `<p class="amsg">${aQuery || aFilter !== "전체" ? "조건에 맞는 사람이 없습니다." : "아직 등록된 사람이 없습니다."}</p>`;
   return list.map(x => `
     <div class="arow">
+      <input type="checkbox" class="ck" data-pick="${x.row}"${selected.has(x.row) ? " checked" : ""} aria-label="${esc(x.name)} 선택">
       <span class="nm">
         <b>${esc(x.name)}</b>${x.alias ? `<span>${esc(x.alias)}</span>` : ""}
         ${x.date ? `<span class="meta">${esc(x.date)} ${esc(x.time)}</span>` : `<span class="meta">면접 일정 미정</span>`}
@@ -1682,6 +1722,58 @@ function listHTML(){
       <button class="mini" type="button" data-edit="${x.row}">수정</button>
       <button class="mini dgr" type="button" data-del="${x.row}">삭제</button>
     </div>`).join("");
+}
+
+function parseBulk(text){
+  return String(text || "").split("\n").map(ln => {
+    const c = ln.split(/\t|,/).map(v => v.trim());
+    return { name: c[0] || "", alias: c[1] || "", date: c[2] || "", time: c[3] || "" };
+  }).filter(x => x.name);
+}
+
+function bulkFormHTML(){
+  return `
+  <div class="aform">
+    <h3>면접자 일괄 추가</h3>
+    <div class="fld">
+      <label for="b-text">한 줄에 한 명씩, 탭이나 쉼표로 구분해 주세요</label>
+      <textarea class="bulkta" id="b-text" placeholder="김하나&#9;하나&#9;2026-10-05&#9;오후 1시&#10;이두리&#9;두리&#9;2026-10-05&#9;오후 2시&#10;박세찬"></textarea>
+      <p class="hintx">순서는 <b>이름 · 활동명 · 면접일 · 면접시간</b>이고, 뒤쪽은 비워두셔도 됩니다. 엑셀이나 시트에서 복사해 붙여넣으시면 탭으로 자동 구분됩니다.</p>
+    </div>
+    <div class="fld">
+      <label for="b-status">추가할 때 상태</label>
+      <select id="b-status">
+        ${STATUSES.map(t => `<option value="${t}"${t === "대기" ? " selected" : ""}>${t}</option>`).join("")}
+      </select>
+    </div>
+    <div id="b-prev"></div>
+    <p class="aerrbox" id="b-err" hidden></p>
+    <div class="abtns">
+      <button type="button" class="cx" id="b-cancel">취소</button>
+      <button type="button" class="go2" id="b-save">추가</button>
+    </div>
+  </div>`;
+}
+
+function bulkPreviewHTML(list){
+  if (!list.length) return `<p class="hintx">붙여넣으시면 여기에 미리보기가 나옵니다.</p>`;
+  const have = {};
+  ((adminData && adminData.people) || []).forEach(x => { have[x.name] = true; });
+  const seen = {};
+  let dups = 0;
+  const rows = list.map((x, i) => {
+    const dup = have[x.name] || seen[x.name];
+    seen[x.name] = true;
+    if (dup) dups++;
+    const rest = [x.alias, x.date, x.time].filter(Boolean).join(" · ");
+    return `<div>
+      <span class="i">${i + 1}</span>
+      <span class="n${dup ? " dup" : ""}">${esc(x.name)}</span>
+      <span class="rest">${dup ? "이미 명단에 있어 건너뜁니다" : esc(rest || "—")}</span>
+    </div>`;
+  }).join("");
+  return `<p class="hintx">${list.length}명 인식${dups ? ` · ${dups}명은 중복이라 제외됩니다` : ""}</p>
+    <div class="prev">${rows}</div>`;
 }
 
 function personFormHTML(x){
@@ -1731,8 +1823,14 @@ function peopleHTML(){
     ? list.filter(x => String(x.row) === String(editing))[0] : null;
   return `
     ${statsHTML()}
-    ${editing ? personFormHTML(cur) : `<button class="addbtn" type="button" id="e-new">+ 면접자 추가</button>`}
+    ${editing === "bulk" ? bulkFormHTML()
+      : editing ? personFormHTML(cur)
+      : `<div class="twobtn">
+           <button class="addbtn" type="button" id="e-new">+ 면접자 추가</button>
+           <button class="addbtn" type="button" id="e-bulk">일괄 추가</button>
+         </div>`}
     ${toolsHTML()}
+    <div id="selbar"></div>
     <div id="alist">${listHTML()}</div>`;
 }
 
@@ -1805,10 +1903,58 @@ async function refreshAdmin(){
   }
 }
 
-function repaintPanel(){ $("#apanel").innerHTML = tabHTML(); bindAdmin(); }
-function repaintList(){ const el = $("#alist"); if (el){ el.innerHTML = listHTML(); bindRows(); } }
+function repaintPanel(){ $("#apanel").innerHTML = tabHTML(); bindAdmin(); renderSelbar(); syncSelAll(); }
+function repaintList(){
+  const el = $("#alist");
+  if (el){ el.innerHTML = listHTML(); bindRows(); }
+  renderSelbar();
+  syncSelAll();
+}
+
+function renderSelbar(){
+  const bar = $("#selbar");
+  if (!bar) return;
+  if (!selected.size){ bar.innerHTML = ""; return; }
+  bar.innerHTML = `
+    <div class="selbar">
+      <span><b>${selected.size}명</b> 선택됨</span>
+      <span class="sp"></span>
+      ${STATUSES.map(t => `<button type="button" data-bulk="${t}">${t} 처리</button>`).join("")}
+      <button type="button" class="g2" id="selclear">선택 해제</button>
+    </div>`;
+  $$("[data-bulk]").forEach(b => b.addEventListener("click", () => bulkStatus(b.dataset.bulk)));
+  $("#selclear").addEventListener("click", () => { selected.clear(); repaintList(); });
+}
+
+function syncSelAll(){
+  const all = $("#selall");
+  if (!all) return;
+  const vis = visiblePeople();
+  all.checked = vis.length > 0 && vis.every(x => selected.has(x.row));
+  all.indeterminate = !all.checked && vis.some(x => selected.has(x.row));
+}
+
+async function bulkStatus(status){
+  const rows = [...selected];
+  if (!rows.length) return;
+  if (!window.confirm(`선택한 ${rows.length}명을 ${status} 처리할까요?`)) return;
+  const bar = $("#selbar");
+  bar.innerHTML = `<div class="selbar"><span>처리 중…</span></div>`;
+  try {
+    const r = await adminCall("bulkstatus", { rows: rows.join(","), status: status });
+    if (r && r.ok){ adminData.people = r.people; selected.clear(); repaintPanel(); }
+    else renderSelbar();
+  } catch (e) { renderSelbar(); }
+}
 
 function bindRows(){
+  $$("[data-pick]").forEach(ck => ck.addEventListener("change", () => {
+    const n = Number(ck.dataset.pick);
+    ck.checked ? selected.add(n) : selected.delete(n);
+    renderSelbar();
+    syncSelAll();
+  }));
+
   $$("[data-status]").forEach(sel => sel.addEventListener("change", async () => {
     sel.disabled = true;
     try {
@@ -1859,7 +2005,7 @@ function bindAdmin(){
   }
 
   $$(".atabs button").forEach(b => b.addEventListener("click", () => {
-    adminTab = b.dataset.tab; editing = null;
+    adminTab = b.dataset.tab; editing = null; selected.clear();
     adminBody(panelHTML()); bindAdmin();
   }));
 
@@ -1872,8 +2018,56 @@ function bindAdmin(){
     repaintList();
   }));
 
+  const all = $("#selall");
+  if (all) all.addEventListener("change", () => {
+    const vis = visiblePeople();
+    vis.forEach(x => all.checked ? selected.add(x.row) : selected.delete(x.row));
+    repaintList();
+  });
+
   const nw = $("#e-new");
   if (nw) nw.addEventListener("click", () => { editing = "new"; repaintPanel(); });
+
+  const bk = $("#e-bulk");
+  if (bk) bk.addEventListener("click", () => { editing = "bulk"; repaintPanel(); });
+
+  const bta = $("#b-text");
+  if (bta){
+    const paint = () => { $("#b-prev").innerHTML = bulkPreviewHTML(parseBulk(bta.value)); };
+    bta.addEventListener("input", paint);
+    paint();
+    $("#b-cancel").addEventListener("click", () => { editing = null; repaintPanel(); });
+    $("#b-save").addEventListener("click", async () => {
+      const list = parseBulk(bta.value);
+      const err = $("#b-err"), go = $("#b-save");
+      err.hidden = true;
+      if (!list.length){ err.textContent = "추가할 사람이 없습니다."; err.hidden = false; return; }
+      go.disabled = true;
+      const status = $("#b-status").value;
+      // 주소 길이 제한이 있어 나눠 보낸다
+      const CH = 12;
+      let added = 0, skipped = [];
+      try {
+        for (let i = 0; i < list.length; i += CH){
+          go.textContent = `추가 중… ${Math.min(i + CH, list.length)}/${list.length}`;
+          const part = list.slice(i, i + CH)
+            .map(x => [x.name, x.alias, x.date, x.time].join("\t")).join("\n");
+          const r = await adminCall("bulk", { rows: part, status: status });
+          if (!r || r.ok !== true) throw new Error((r && r.error) || "추가하지 못했습니다.");
+          added += r.added || 0;
+          skipped = skipped.concat(r.skipped || []);
+          adminData.people = r.people;
+        }
+        editing = null;
+        repaintPanel();
+        if (skipped.length) window.alert(`${added}명을 추가했습니다.\n이미 있어 건너뛴 사람: ${skipped.join(", ")}`);
+      } catch (e2) {
+        go.disabled = false; go.textContent = "추가";
+        err.textContent = String(e2.message || e2);
+        err.hidden = false;
+      }
+    });
+  }
 
   const cancel = $("#e-cancel");
   if (cancel) cancel.addEventListener("click", () => { editing = null; repaintPanel(); });
