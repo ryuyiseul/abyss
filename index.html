@@ -448,40 +448,6 @@
   }
   @media (prefers-reduced-motion:reduce){.faq summary:after{transition:none}}
 
-  /* ---------- pending (no schedule yet) ---------- */
-  .pend .headline{
-    margin-top:18px;
-    font-size:clamp(1.25rem,4.8vw,1.55rem);
-    font-weight:300;line-height:1.34;letter-spacing:-0.03em;
-  }
-  .pend .sub-lede{margin:12px 0 0;color:var(--silver-2);font-size:.93rem}
-  .wait{
-    font-size:.78rem;font-weight:600;color:var(--black);
-    background:var(--white);padding:3px 11px;border-radius:999px;
-  }
-  .opts{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
-  .chip{
-    border:1px solid var(--hair);background:var(--panel-2);border-radius:2px;
-    padding:7px 12px;font-size:.9rem;color:var(--white);
-    font-variant-numeric:tabular-nums;white-space:nowrap;
-  }
-  .cta{
-    display:flex;align-items:center;justify-content:center;gap:10px;
-    width:100%;padding:18px 20px;margin-top:18px;border-radius:3px;
-    background:var(--white);color:var(--black);
-    font-size:1rem;font-weight:700;letter-spacing:-0.02em;text-decoration:none;
-    transition:background .15s ease,transform .15s ease;
-  }
-  .cta:hover{background:var(--silver);transform:translateY(-1px)}
-  .cta:active{transform:translateY(0)}
-  .cta:focus-visible{outline:2px solid var(--white);outline-offset:4px}
-  .cta .arw{font-weight:400;transition:transform .15s ease}
-  .cta:hover .arw{transform:translateX(4px)}
-  @media (prefers-reduced-motion:reduce){
-    .cta,.cta .arw{transition:none}
-    .cta:hover,.cta:hover .arw{transform:none}
-  }
-
   /* ---------- empty / multi ---------- */
   .miss{
     margin-top:32px;padding:26px 24px;background:var(--panel);
@@ -518,6 +484,83 @@
     .b-star{padding:17px 16px}
     .b-list li{padding-left:34px}
   }
+
+  /* ---------- admin ---------- */
+  .adminbar{max-width:var(--maxw);margin:28px auto 0;text-align:center}
+  .adminbtn{
+    background:transparent;border:1px solid var(--hair-soft);color:var(--silver-3);
+    font-size:.78rem;padding:7px 14px;letter-spacing:.04em;
+    transition:border-color .15s ease,color .15s ease;
+  }
+  .adminbtn:hover{border-color:var(--hair);color:var(--silver-2)}
+  .adminbtn:focus-visible{outline:2px solid var(--silver-3);outline-offset:3px}
+
+  .admin{width:min(880px,calc(100vw - 24px));max-height:min(90vh,900px)}
+  .admin .modal-body{padding:0}
+  .apad{padding:22px}
+  .atabs{display:flex;border-bottom:1px solid var(--hair-soft);position:sticky;top:0;background:var(--panel);z-index:2}
+  .atabs button{
+    flex:1;padding:15px 8px;background:transparent;border:none;border-bottom:2px solid transparent;
+    color:var(--silver-3);font-size:.92rem;border-radius:0;
+  }
+  .atabs button.on{color:var(--white);border-bottom-color:var(--white);font-weight:600}
+  .atabs button:hover{color:var(--silver)}
+
+  .arow{
+    display:flex;align-items:center;gap:10px;padding:13px 0;
+    border-bottom:1px solid var(--hair-soft);font-size:.92rem;
+  }
+  .arow .nm{flex:1;min-width:0}
+  .arow .nm b{font-weight:600}
+  .arow .nm span{color:var(--silver-3);font-size:.86rem;margin-left:7px}
+  .arow .nm .meta{display:block;color:var(--silver-3);font-size:.82rem;margin-top:3px}
+  .pill{
+    flex:0 0 auto;padding:6px 11px;font-size:.8rem;border-radius:999px;
+    border:1px solid var(--hair);background:transparent;color:var(--silver-3);white-space:nowrap;
+  }
+  .pill.on{background:var(--white);color:var(--black);border-color:var(--white);font-weight:700}
+  .mini{
+    flex:0 0 auto;padding:6px 10px;font-size:.82rem;background:transparent;
+    border:1px solid var(--hair);color:var(--silver-2);white-space:nowrap;
+  }
+  .mini:hover{border-color:var(--silver-2);color:var(--white)}
+  .mini.dgr:hover{border-color:#8C5350;color:#D79A97}
+
+  .aform{padding:18px;background:var(--panel-2);border-radius:3px;margin-bottom:18px}
+  .aform h3{margin:0 0 14px;font-size:.95rem;font-weight:600}
+  .aform .two{display:flex;gap:9px}
+  .aform .fld{margin-bottom:13px}
+  .aform label{display:block;font-size:.85rem;color:var(--silver-2);margin-bottom:6px}
+  .aform input{
+    width:100%;padding:11px 13px;background:var(--panel);border:1px solid var(--hair);
+    border-radius:2px;color:var(--white);font:inherit;font-size:.95rem;
+  }
+  .aform input:focus{outline:none;border-color:var(--silver)}
+  .achk{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.92rem;margin:4px 0 14px}
+  .achk input{width:19px;height:19px;accent-color:#fff;cursor:pointer}
+  .abtns{display:flex;gap:8px}
+  .abtns button{flex:1;padding:12px;font-size:.92rem}
+  .abtns .go2{background:var(--white);color:var(--black);font-weight:600}
+  .abtns .go2:hover{background:var(--silver)}
+  .abtns .cx{background:transparent;border:1px solid var(--hair);color:var(--silver)}
+
+  .sub{padding:15px 0;border-bottom:1px solid var(--hair-soft)}
+  .sub .t{display:flex;gap:9px;align-items:baseline;flex-wrap:wrap}
+  .sub .t b{font-size:.98rem;font-weight:600}
+  .sub .t .br{color:var(--white);font-size:.95rem}
+  .sub .t .at{color:var(--silver-3);font-size:.82rem;margin-left:auto}
+  .sub .d{margin-top:7px;color:var(--silver-2);font-size:.88rem;line-height:1.7}
+  .sub .d span{color:var(--silver-3)}
+  .amsg{padding:26px 0;text-align:center;color:var(--silver-3);font-size:.9rem}
+  /* 좁은 화면에서는 이름을 한 줄 차지하게 하고 버튼을 아래로 내린다 */
+  @media (max-width:420px){
+    .arow{flex-wrap:wrap}
+    .arow .nm{flex:1 0 100%;margin-bottom:10px}
+    .arow .pill,.arow .mini{flex:1;text-align:center}
+    .aform .two{flex-direction:column;gap:0}
+    .sub .t .at{margin-left:0;flex:1 0 100%}
+  }
+  .acount{font-size:.84rem;color:var(--silver-3);margin:0 0 14px}
 
   /* ---------- bottom contact ---------- */
   .contact{
@@ -596,7 +639,19 @@
 </section>
 
 <footer>ABYSS</footer>
+<div class="adminbar"><button class="adminbtn" type="button" id="adminopen">관리자</button></div>
 <div class="toast" id="toast">주소를 복사했습니다</div>
+
+<dialog class="modal admin" id="admin" aria-labelledby="admin-title">
+  <div class="modal-head">
+    <div>
+      <p class="kicker">ABYSS</p>
+      <h2 id="admin-title">관리자</h2>
+    </div>
+    <button class="x" type="button" id="admin-x" aria-label="닫기">✕</button>
+  </div>
+  <div class="modal-body" id="admin-body"></div>
+</dialog>
 
 <dialog class="modal confirm" id="bizwarn" aria-labelledby="bizwarn-title">
   <div class="modal-head">
@@ -695,38 +750,12 @@ const MAP_URL = "https://naver.me/5yPiqrom";
 // 조회 기록을 남길 구글 Apps Script 웹앱 URL. 비워두면 아무것도 기록하지 않습니다.
 const LOG_URL = "https://script.google.com/macros/s/AKfycbzLVYx49o__NO_Wc4IZ7umRBF9PXkkT_q_SI-U1NrRTjmK8U7gbgp6Va8miulH2Gl7y/exec";
 
-const SLOT_DATES = ["9월 10일 목", "9월 11일 금", "9월 17일 목", "9월 18일 금"];
-const SLOT_TIMES = ["오후 1시", "오후 2시", "오후 3시", "오후 4시", "오후 5시", "오후 6시"];
-
-const DATA = [
-  {name:"오시연", alias:"CLOVA",          date:"2026-09-10", time:"오후 1시",  h:13},
-  {name:"이기백", alias:"마음드림",        date:"2026-09-10", time:"오후 2시",  h:14},
-  {name:"최은진", alias:"초이",           date:"2026-09-10", time:"오후 3시",  h:15},
-  {name:"전다희", alias:"희야",           date:"2026-09-10", time:"오후 4시",  h:16},
-
-  {name:"허현승", alias:"프레스런 커리3",  date:"2026-09-11", time:"오전 11시", h:11},
-  {name:"이미연", alias:"땅스",           date:"2026-09-11", time:"오후 1시",  h:13},
-  {name:"권찬미", alias:"찬미",           date:"2026-09-11", time:"오후 2시",  h:14},
-  {name:"류장미", alias:"제이J",          date:"2026-09-11", time:"오후 3시",  h:15},
-  {name:"이지환", alias:"구구공",         date:"2026-09-11", time:"오후 4시",  h:16},
-
-  {name:"고경미", alias:"프레스런 juni",   date:"2026-09-17", time:"오후 1시",  h:13},
-  {name:"유은지", alias:"이억이억",        date:"2026-09-17", time:"오후 2시",  h:14},
-  {name:"김태은", alias:"나나",           date:"2026-09-17", time:"오후 3시",  h:15},
-  {name:"김민정", alias:"프레스런 엠제이", date:"2026-09-17", time:"오후 4시",  h:16},
-  {name:"정연화", alias:"여나",           date:"2026-09-17", time:"오후 5시",  h:17},
-  {name:"이현재", alias:"이추추",         date:"2026-09-17", time:"오후 6시",  h:18},
-
-  {name:"백명주", alias:"프레스런 구슬",   date:"2026-09-18", time:"오전 11시", h:11},
-  {name:"박효진", alias:"효진",           date:"2026-09-18", time:"오후 2시",  h:14},
-  {name:"김현아", alias:"부산다다",        date:"2026-09-18", time:"오후 3시",  h:15},
-  {name:"신지수", alias:"프레스런 도도",   date:"2026-09-18", time:"오후 4시",  h:16},
-
-  // 동작 확인용 테스트 항목. 테스트가 끝나면 이 한 줄만 지우면 됩니다.
-  {name:"류이슬", alias:"알스터",          date:"2026-09-18", time:"오후 5시",  h:17}
-];
+// 명단은 관리자 페이지에서 관리하며, 서버(Apps Script)에서 받아옵니다.
+let DATA = [];
+let rosterState = "loading";   // loading | ready | error
 
 const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
 const norm = s => (s||"").replace(/\s+/g,"").toLowerCase();
 const esc = s => s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const DOW = ["일","월","화","수","목","금","토"];
@@ -768,16 +797,6 @@ const FAQ_BOOKED = [
     <p><a class="ghost" href="${MAP_URL}" target="_blank" rel="noopener">지도에서 위치 보기</a></p>`],
   ["주차할 수 있나요?", `
     <p>주차 가능합니다. 차량으로 오셔도 괜찮습니다.</p>`],
-  ...FAQ_KIT
-];
-
-const FAQ_PENDING = [
-  ["안내된 날짜에 가능한 시간이 없어요", `
-    <p>안내드린 4개 날짜와 오후 1시~6시 외에는 면접 진행이 어렵습니다. 먼저 이 범위 안에서 가능한 일정을 최대한 찾아봐 주세요.</p>
-    <p>그래도 어려우시다면 <a href="${KAKAO}" target="_blank" rel="noopener">카카오톡</a>으로 상황을 알려주세요.</p>`],
-  ["일정을 전달한 뒤에 바꿀 수 있나요?", `
-    <p>회신해 주신 일정 안에서 배정되며, 배정이 확정된 뒤에는 변경과 재조율이 어렵습니다.</p>
-    <p>실제로 참석 가능한 일정만 신중하게 회신해 주세요.</p>`],
   ...FAQ_KIT
 ];
 
@@ -1246,50 +1265,6 @@ function cardHTML(p){
   </div>`;
 }
 
-function pendingHTML(p){
-  const chips = a => a.map(v => `<span class="chip">${esc(v)}</span>`).join("");
-  return `
-  <div class="card pend reveal">
-    <div class="card-top">
-      <div class="who"><strong>${esc(p.name)}</strong> <span class="wait">일정 미회신</span></div>
-      <div class="headline">아직 가능한 일정을<br>공유해주지 않으셨습니다</div>
-      <p class="sub-lede">아래 안내를 확인하신 뒤, 맨 아래 카카오톡 버튼을 눌러 가능한 날짜와 시간대를 알스터에게 빠르게 전달해 주세요.</p>
-    </div>
-
-    <div class="card-body">
-      <div class="row">
-        <div class="k">가능 날짜</div>
-        <div class="v"><div class="opts">${chips(SLOT_DATES)}</div></div>
-      </div>
-      <div class="row">
-        <div class="k">가능 시간</div>
-        <div class="v">
-          <div class="opts">${chips(SLOT_TIMES)}</div>
-          <div class="sub">오후 1시 ~ 6시 사이에서 랜덤으로 배정됩니다.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="sec">
-      <h2>회신 시 참고해 주세요</h2>
-      <div class="notes">
-        <p>원활한 일정 조율을 위해 가능한 날짜와 시간대를 최대한 많이 전달 부탁드립니다.</p>
-        <p>최종 면접 날짜와 시간은 전체 일정을 취합한 후 별도로 공지드릴 예정입니다.</p>
-        <p>안내드린 4개 날짜 및 시간 외에는 면접 진행이 어려우니, 반드시 가능한 일정 내에서 회신 부탁드립니다.</p>
-      </div>
-      <a class="cta" href="${KAKAO}" target="_blank" rel="noopener">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M12 3C6.9 3 2.8 6.2 2.8 10.2c0 2.5 1.7 4.7 4.2 6-.2.7-.7 2.5-.8 2.9-.1.5.2.5.4.4.2-.1 2.6-1.7 3.6-2.4.6.1 1.2.1 1.8.1 5.1 0 9.2-3.2 9.2-7.2S17.1 3 12 3z"/>
-        </svg>
-        카카오톡으로 일정 전달하기 <span class="arw">→</span>
-      </a>
-    </div>
-
-    ${faqHTML(FAQ_PENDING)}
-    ${benefitBarHTML()}
-  </div>`;
-}
-
 function missHTML(q){
   return `
   <div class="miss reveal">
@@ -1312,6 +1287,38 @@ function pickHTML(list){
 
 let candidates = [];
 function render(html){ $("#result").innerHTML = html; bind(); }
+async function loadRoster(){
+  const go = $("#go"), hint = $(".hint");
+  const base = hint ? hint.textContent : "";
+  try {
+    const r = await jsonp(LOG_URL, { type: "roster" }, 15000);
+    if (!r || !Array.isArray(r.people)) throw new Error("bad");
+    DATA = r.people;
+    rosterState = "ready";
+    if (go){ go.disabled = false; go.textContent = "조회"; }
+    if (hint) hint.textContent = base;
+  } catch (e) {
+    rosterState = "error";
+    if (go){ go.disabled = false; go.textContent = "조회"; }
+    if (hint) hint.textContent = "명단을 불러오지 못했습니다. 새로고침해 주세요.";
+  }
+}
+
+function notYetHTML(p){
+  return `
+  <div class="card pass reveal">
+    <div class="card-top">
+      <div class="who"><strong>${esc(p.name)}</strong>${p.alias ? ` <span class="alias">${esc(p.alias)}</span>` : ""}</div>
+      <div class="headline">결과를 준비하고<br>있습니다</div>
+      <p class="congrat">아직 결과가 발표되지 않았습니다. 발표되면 이 화면에서 바로 확인하실 수 있으니, 잠시만 기다려 주세요.</p>
+    </div>
+    <div class="sec">
+      <p class="sec-lede">궁금한 점이 있으시면 아래 카카오톡으로 문의해 주세요.</p>
+      <a class="ghost wide" href="${KAKAO}" target="_blank" rel="noopener">카카오톡으로 문의하기</a>
+    </div>
+  </div>`;
+}
+
 // 조회 기록. 실패해도 조회 자체는 절대 막지 않는다.
 function logView(p){
   if (!LOG_URL) return;
@@ -1341,7 +1348,9 @@ let current = null;
 function renderPerson(p){
   current = p;
   logView(p);
-  render(passHTML(p) + (p.pending ? pendingHTML(p) : cardHTML(p)));
+  let html = p.pass ? passHTML(p) : notYetHTML(p);
+  if (p.date && p.h) html += cardHTML(p);   // 면접 일정이 있는 경우에만
+  render(html);
 }
 
 function bind(){
@@ -1386,6 +1395,7 @@ function keysOf(p){
 }
 
 function search(){
+  if (rosterState === "loading") return;
   const raw = $("#q").value.trim();
   const q = norm(raw);
   if (!q){ $("#result").innerHTML = ""; $("#q").focus(); return; }
@@ -1400,6 +1410,258 @@ function search(){
   else if (hits.length > 1){ candidates = hits; render(pickHTML(hits)); }
   else render(missHTML(raw));
 }
+
+// ============ 관리자 ============
+let adminData = null;
+let adminTab = "people";
+let editing = null;          // null | "new" | row 번호
+
+function adminPw(){ try { return sessionStorage.getItem("abyss-adm") || ""; } catch (e) { return ""; } }
+function setAdminPw(v){ try { v ? sessionStorage.setItem("abyss-adm", v) : sessionStorage.removeItem("abyss-adm"); } catch (e) {} }
+
+function adminCall(act, extra){
+  const q = Object.assign({ type: "admin", act: act, pw: adminPw() }, extra || {});
+  return jsonp(LOG_URL, q, 20000);
+}
+
+// "오후 3시" → 15. 관리자가 시(24h)를 직접 입력하지 않아도 되게.
+function parseHour(t){
+  const m = String(t || "").match(/(오전|오후|낮)\s*(\d{1,2})\s*시/);
+  if (!m) return 0;
+  const n = Number(m[2]);
+  if (m[1] === "오전") return n;
+  if (m[1] === "낮") return 12;
+  return n === 12 ? 12 : n + 12;
+}
+
+function adminBody(html){ $("#admin-body").innerHTML = html; }
+
+function loginHTML(msg){
+  return `
+  <div class="apad">
+    <form id="alogin" novalidate>
+      <div class="fld">
+        <label for="apw">비밀번호</label>
+        <input id="apw" type="password" autocomplete="current-password" placeholder="비밀번호를 입력하세요">
+        <p class="err" id="aerr"${msg ? "" : " hidden"}>${msg ? esc(msg) : ""}</p>
+      </div>
+      <button class="submit" type="submit" id="ago">로그인</button>
+    </form>
+  </div>`;
+}
+
+function panelHTML(){
+  return `
+  <div class="atabs">
+    <button type="button" data-tab="people" class="${adminTab === "people" ? "on" : ""}">합격자 관리</button>
+    <button type="button" data-tab="subs" class="${adminTab === "subs" ? "on" : ""}">제출 내역</button>
+  </div>
+  <div class="apad" id="apanel">${adminTab === "people" ? peopleHTML() : subsHTML()}</div>`;
+}
+
+function personFormHTML(x){
+  const v = x || { name: "", alias: "", pass: false, date: "", time: "" };
+  return `
+  <div class="aform">
+    <h3>${x ? "정보 수정" : "합격자 추가"}</h3>
+    <div class="two">
+      <div class="fld" style="flex:1">
+        <label for="e-name">이름</label>
+        <input id="e-name" type="text" value="${esc(v.name)}" placeholder="홍길동">
+      </div>
+      <div class="fld" style="flex:1">
+        <label for="e-alias">활동명</label>
+        <input id="e-alias" type="text" value="${esc(v.alias)}" placeholder="닉네임">
+      </div>
+    </div>
+    <div class="two">
+      <div class="fld" style="flex:1">
+        <label for="e-date">면접일 (선택)</label>
+        <input id="e-date" type="text" value="${esc(v.date)}" placeholder="2026-09-10">
+      </div>
+      <div class="fld" style="flex:1">
+        <label for="e-time">면접시간 (선택)</label>
+        <input id="e-time" type="text" value="${esc(v.time)}" placeholder="오후 3시">
+      </div>
+    </div>
+    <label class="achk" for="e-pass">
+      <input id="e-pass" type="checkbox"${v.pass ? " checked" : ""}>
+      <span>합격 처리 — 체크하면 이 분에게 지사 설립 폼이 보입니다</span>
+    </label>
+    <p class="err" id="e-err" hidden></p>
+    <div class="abtns">
+      <button type="button" class="cx" id="e-cancel">취소</button>
+      <button type="button" class="go2" id="e-save">저장</button>
+    </div>
+  </div>`;
+}
+
+function peopleHTML(){
+  const list = (adminData && adminData.people) || [];
+  const cur = editing && editing !== "new"
+    ? list.filter(x => String(x.row) === String(editing))[0] : null;
+  const form = editing ? personFormHTML(cur) : "";
+  const pass = list.filter(x => x.pass).length;
+  return `
+    ${form}
+    ${editing ? "" : `<button class="ghost wide" type="button" id="e-new" style="margin:0 0 18px">합격자 추가</button>`}
+    <p class="acount">전체 ${list.length}명 · 합격 ${pass}명</p>
+    ${list.length ? list.map(x => `
+      <div class="arow">
+        <span class="nm">
+          <b>${esc(x.name)}</b>${x.alias ? `<span>${esc(x.alias)}</span>` : ""}
+          ${x.date ? `<span class="meta">${esc(x.date)} ${esc(x.time)}</span>` : ""}
+        </span>
+        <button class="pill${x.pass ? " on" : ""}" type="button" data-pass="${x.row}" data-to="${x.pass ? "N" : "Y"}">${x.pass ? "합격" : "미합격"}</button>
+        <button class="mini" type="button" data-edit="${x.row}">수정</button>
+        <button class="mini dgr" type="button" data-del="${x.row}">삭제</button>
+      </div>`).join("") : `<p class="amsg">아직 등록된 사람이 없습니다.</p>`}`;
+}
+
+function subsHTML(){
+  const list = (adminData && adminData.subs) || [];
+  return `
+    <p class="acount">지사 신청 ${list.length}건</p>
+    ${list.length ? list.map(x => `
+      <div class="sub">
+        <div class="t">
+          <b>${esc(x.name)}</b>
+          <span class="br">${esc(x.branch)}</span>
+          <span class="at">${esc(x.at)}</span>
+        </div>
+        <div class="d">
+          <span>전화</span> ${esc(x.phone)} &nbsp;·&nbsp;
+          <span>사업자등록 예정지</span> ${esc(x.biz)}
+        </div>
+      </div>`).join("") : `<p class="amsg">아직 제출된 신청이 없습니다.</p>`}`;
+}
+
+async function openAdmin(){
+  const box = $("#admin");
+  if (typeof box.showModal === "function") box.showModal(); else box.setAttribute("open", "");
+  document.body.style.overflow = "hidden";
+  if (adminPw()){
+    adminBody(`<p class="amsg">불러오는 중…</p>`);
+    await refreshAdmin();
+  } else {
+    adminBody(loginHTML(""));
+  }
+  bindAdmin();
+}
+
+function closeAdmin(){
+  const box = $("#admin");
+  if (typeof box.close === "function") box.close(); else box.removeAttribute("open");
+  document.body.style.overflow = "";
+}
+
+async function refreshAdmin(){
+  try {
+    const r = await adminCall("load");
+    if (!r || r.ok !== true){ setAdminPw(""); adminBody(loginHTML("다시 로그인해 주세요.")); bindAdmin(); return; }
+    adminData = r;
+    adminBody(panelHTML());
+    bindAdmin();
+  } catch (e) {
+    adminBody(`<div class="apad"><p class="amsg">불러오지 못했습니다. 잠시 후 다시 시도해 주세요.</p></div>`);
+  }
+}
+
+function bindAdmin(){
+  const form = $("#alogin");
+  if (form){
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      const pw = $("#apw").value.trim();
+      const err = $("#aerr"), go = $("#ago");
+      err.hidden = true;
+      if (!pw){ err.textContent = "비밀번호를 입력해 주세요."; err.hidden = false; return; }
+      go.disabled = true; go.textContent = "확인 중…";
+      setAdminPw(pw);
+      try {
+        const r = await adminCall("login");
+        if (!r || r.ok !== true) throw new Error("auth");
+        adminBody(`<p class="amsg">불러오는 중…</p>`);
+        await refreshAdmin();
+      } catch (err2) {
+        setAdminPw("");
+        adminBody(loginHTML("비밀번호가 맞지 않습니다."));
+        bindAdmin();
+      }
+    });
+    return;
+  }
+
+  $$(".atabs button").forEach(b => b.addEventListener("click", () => {
+    adminTab = b.dataset.tab; editing = null;
+    adminBody(panelHTML()); bindAdmin();
+  }));
+
+  const nw = $("#e-new");
+  if (nw) nw.addEventListener("click", () => { editing = "new"; adminBody(panelHTML()); bindAdmin(); });
+
+  $$("[data-edit]").forEach(b => b.addEventListener("click", () => {
+    editing = b.dataset.edit; adminBody(panelHTML()); bindAdmin();
+  }));
+
+  const cancel = $("#e-cancel");
+  if (cancel) cancel.addEventListener("click", () => { editing = null; adminBody(panelHTML()); bindAdmin(); });
+
+  const save = $("#e-save");
+  if (save) save.addEventListener("click", async () => {
+    const name = $("#e-name").value.trim();
+    const err = $("#e-err");
+    err.hidden = true;
+    if (!name){ err.textContent = "이름을 입력해 주세요."; err.hidden = false; $("#e-name").focus(); return; }
+    const time = $("#e-time").value.trim();
+    save.disabled = true; save.textContent = "저장 중…";
+    try {
+      const r = await adminCall("save", {
+        row: editing === "new" ? "" : editing,
+        name: name,
+        alias: $("#e-alias").value.trim(),
+        pass: $("#e-pass").checked ? "Y" : "N",
+        date: $("#e-date").value.trim(),
+        time: time,
+        h: parseHour(time)
+      });
+      if (!r || r.ok !== true) throw new Error((r && r.error) || "save");
+      adminData.people = r.people;
+      editing = null;
+      adminBody(panelHTML()); bindAdmin();
+    } catch (e2) {
+      save.disabled = false; save.textContent = "저장";
+      err.textContent = String(e2.message || e2) === "save" ? "저장하지 못했습니다." : String(e2.message || e2);
+      err.hidden = false;
+    }
+  });
+
+  $$("[data-pass]").forEach(b => b.addEventListener("click", async () => {
+    b.disabled = true;
+    try {
+      const r = await adminCall("pass", { row: b.dataset.pass, pass: b.dataset.to });
+      if (r && r.ok){ adminData.people = r.people; adminBody(panelHTML()); bindAdmin(); }
+      else b.disabled = false;
+    } catch (e3) { b.disabled = false; }
+  }));
+
+  $$("[data-del]").forEach(b => b.addEventListener("click", async () => {
+    const row = b.dataset.del;
+    const who = (adminData.people.filter(x => String(x.row) === String(row))[0] || {}).name || "";
+    if (!window.confirm(`${who} 님을 명단에서 삭제할까요?\n조회 페이지에서도 즉시 사라집니다.`)) return;
+    b.disabled = true;
+    try {
+      const r = await adminCall("del", { row: row });
+      if (r && r.ok){ adminData.people = r.people; adminBody(panelHTML()); bindAdmin(); }
+      else b.disabled = false;
+    } catch (e4) { b.disabled = false; }
+  }));
+}
+
+$("#adminopen").addEventListener("click", openAdmin);
+$("#admin-x").addEventListener("click", closeAdmin);
+$("#admin").addEventListener("click", e => { if (e.target === $("#admin")) closeAdmin(); });
+$("#admin").addEventListener("close", () => { document.body.style.overflow = ""; });
 
 const dlg = $("#benefits");
 function openBenefits(){
@@ -1425,6 +1687,10 @@ $("#home").addEventListener("click", () => {
   current = null;
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
+
+$("#go").disabled = true;
+$("#go").textContent = "불러오는 중";
+loadRoster();
 
 $("#go").addEventListener("click", search);
 $("#q").addEventListener("keydown", e => { if (e.key === "Enter") search(); });
