@@ -750,9 +750,33 @@ const MAP_URL = "https://naver.me/5yPiqrom";
 // 조회 기록을 남길 구글 Apps Script 웹앱 URL. 비워두면 아무것도 기록하지 않습니다.
 const LOG_URL = "https://script.google.com/macros/s/AKfycbzLVYx49o__NO_Wc4IZ7umRBF9PXkkT_q_SI-U1NrRTjmK8U7gbgp6Va8miulH2Gl7y/exec";
 
-// 명단은 관리자 페이지에서 관리하며, 서버(Apps Script)에서 받아옵니다.
-let DATA = [];
-let rosterState = "loading";   // loading | ready | error
+// 명단은 관리자 페이지에서 관리하며 서버(Apps Script)에서 받아옵니다.
+// 서버를 못 받아와도 조회가 멈추지 않도록, 아래 명단을 예비로 둡니다.
+const FALLBACK = [
+  {name:"오시연", alias:"CLOVA",          pass:true, date:"2026-09-10", time:"오후 1시",  h:13},
+  {name:"이기백", alias:"마음드림",        pass:true, date:"2026-09-10", time:"오후 2시",  h:14},
+  {name:"최은진", alias:"초이",           pass:true, date:"2026-09-10", time:"오후 3시",  h:15},
+  {name:"전다희", alias:"희야",           pass:true, date:"2026-09-10", time:"오후 4시",  h:16},
+  {name:"허현승", alias:"프레스런 커리3",  pass:true, date:"2026-09-11", time:"오전 11시", h:11},
+  {name:"이미연", alias:"땅스",           pass:true, date:"2026-09-11", time:"오후 1시",  h:13},
+  {name:"권찬미", alias:"찬미",           pass:true, date:"2026-09-11", time:"오후 2시",  h:14},
+  {name:"류장미", alias:"제이J",          pass:true, date:"2026-09-11", time:"오후 3시",  h:15},
+  {name:"이지환", alias:"구구공",         pass:true, date:"2026-09-11", time:"오후 4시",  h:16},
+  {name:"고경미", alias:"프레스런 juni",   pass:true, date:"2026-09-17", time:"오후 1시",  h:13},
+  {name:"유은지", alias:"이억이억",        pass:true, date:"2026-09-17", time:"오후 2시",  h:14},
+  {name:"김태은", alias:"나나",           pass:true, date:"2026-09-17", time:"오후 3시",  h:15},
+  {name:"김민정", alias:"프레스런 엠제이", pass:true, date:"2026-09-17", time:"오후 4시",  h:16},
+  {name:"정연화", alias:"여나",           pass:true, date:"2026-09-17", time:"오후 5시",  h:17},
+  {name:"이현재", alias:"이추추",         pass:true, date:"2026-09-17", time:"오후 6시",  h:18},
+  {name:"백명주", alias:"프레스런 구슬",   pass:true, date:"2026-09-18", time:"오전 11시", h:11},
+  {name:"박효진", alias:"효진",           pass:true, date:"2026-09-18", time:"오후 2시",  h:14},
+  {name:"김현아", alias:"부산다다",        pass:true, date:"2026-09-18", time:"오후 3시",  h:15},
+  {name:"신지수", alias:"프레스런 도도",   pass:true, date:"2026-09-18", time:"오후 4시",  h:16},
+  {name:"류이슬", alias:"알스터",          pass:true, date:"2026-09-18", time:"오후 5시",  h:17}
+];
+
+let DATA = FALLBACK;
+let rosterState = "ready";   // ready | error
 
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
@@ -1298,9 +1322,9 @@ async function loadRoster(){
     if (go){ go.disabled = false; go.textContent = "조회"; }
     if (hint) hint.textContent = base;
   } catch (e) {
+    // 서버가 안 되면 내장 명단으로 계속 동작한다. 조회는 절대 멈추지 않는다.
     rosterState = "error";
     if (go){ go.disabled = false; go.textContent = "조회"; }
-    if (hint) hint.textContent = "명단을 불러오지 못했습니다. 새로고침해 주세요.";
   }
 }
 
@@ -1395,7 +1419,6 @@ function keysOf(p){
 }
 
 function search(){
-  if (rosterState === "loading") return;
   const raw = $("#q").value.trim();
   const q = norm(raw);
   if (!q){ $("#result").innerHTML = ""; $("#q").focus(); return; }
@@ -1688,9 +1711,7 @@ $("#home").addEventListener("click", () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
-$("#go").disabled = true;
-$("#go").textContent = "불러오는 중";
-loadRoster();
+loadRoster();   // 서버 명단으로 덮어쓴다. 실패해도 내장 명단으로 동작한다.
 
 $("#go").addEventListener("click", search);
 $("#q").addEventListener("keydown", e => { if (e.key === "Enter") search(); });
