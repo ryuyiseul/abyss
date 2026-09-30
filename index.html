@@ -302,6 +302,13 @@
   .cmp .d .top{display:block;color:var(--white);font-weight:600;margin-bottom:4px}
   .cmp .r.no .d .top{color:var(--silver-2);text-decoration:line-through;text-decoration-color:var(--silver-3)}
 
+  .taken{margin-top:14px}
+  .taken .tl{font-size:.84rem;color:var(--silver-3);margin:0 0 8px}
+  .taken .eg{color:var(--silver-3);text-decoration:line-through;text-decoration-color:var(--hair)}
+  .preview.dup{border-color:#8C5350}
+  .preview .val.dup{color:#D79A97}
+  .dupmsg{margin:8px 0 0;font-size:.86rem;color:#D79A97;line-height:1.6}
+
   .form{margin-top:20px}
   .fld{margin-bottom:17px}
   .fld:last-of-type{margin-bottom:0}
@@ -695,6 +702,40 @@ const FAQ_PENDING = [
 
 const BRANCH_EGS = ["어비스 서울 마곡지사","어비스 성남 분당지사","어비스 대전 둔산지사","어비스 부산 해운대지사"];
 
+// 이미 사용 중인 지사명. null = 아직 확인 못 함(서버가 제출 시 최종 판정).
+let takenList = null;
+
+function normBranch(v){ return (v || "").replace(/\s+/g, "").toLowerCase(); }
+
+function isTaken(name){
+  if (!takenList || !name) return false;
+  const mine = normBranch((getApplied(current || {}) || {}).branch);
+  const n = normBranch(name);
+  if (n === mine) return false;          // 내가 이미 신청해 둔 이름은 중복이 아니다
+  return takenList.some(t => normBranch(t) === n);
+}
+
+async function loadTaken(){
+  if (!LOG_URL) return;
+  try {
+    const r = await jsonp(LOG_URL, { type: "list" }, 12000);
+    takenList = (r && Array.isArray(r.branches)) ? r.branches : [];
+  } catch (e) {
+    takenList = null;   // 못 불러와도 폼은 쓸 수 있게 두고, 제출 때 서버가 막는다
+  }
+  paintTaken();
+  syncPreview();
+}
+
+function paintTaken(){
+  const wrap = $("#taken-wrap");
+  if (!wrap) return;
+  if (!takenList || !takenList.length){ wrap.innerHTML = ""; return; }
+  wrap.innerHTML = `
+    <p class="tl">이미 사용 중인 지사명입니다. 아래 이름은 선택하실 수 없습니다.</p>
+    <div class="egs">${takenList.map(t => `<span class="eg">${esc(t)}</span>`).join("")}</div>`;
+}
+
 function appliedKey(p){ return "abyss-branch:" + p.name; }
 function getApplied(p){
   try { return JSON.parse(localStorage.getItem(appliedKey(p)) || "null"); }
@@ -748,6 +789,7 @@ function formHTML(){
         <span class="lbl">지사명</span>
         <span class="val empty" id="f-preview">지역과 세부 지역을 입력해 주세요</span>
       </div>
+      <p class="dupmsg" id="f-dup" hidden></p>
       <p class="err" id="e-branch" hidden></p>
     </div>
 
@@ -796,6 +838,7 @@ function passHTML(p){
         </ul>
       </div>
       <div class="egs">${BRANCH_EGS.map(e => `<span class="eg">${esc(e)}</span>`).join("")}</div>
+      <div class="taken" id="taken-wrap"></div>
 
       <p class="subh">사업자등록 예정지와 맞아야 합니다</p>
       <p class="ptxt">지사가 되시면 사업자등록을 함께 진행하게 됩니다. 이때 <b>사업자등록지와 지사명의 지역이 너무 멀면 지사명을 확정해 드릴 수 없습니다.</b> 실제로 등록하실 지역을 기준으로 지사명을 정해 주세요.</p>
@@ -858,6 +901,8 @@ function bindForm(p){
   const wrap = $("#fwrap");
   if (!wrap) return;
 
+  if (takenList === null) loadTaken(); else paintTaken();
+
   const reopen = $("#reopen");
   if (reopen){
     reopen.addEventListener("click", () => {
@@ -911,6 +956,9 @@ function bindForm(p){
     if (!branch){
       showErr("#e-branch", "지역과 세부 지역을 모두 입력해 주세요.");
       bad = bad || (rg ? detail : region);
+    } else if (isTaken(branch)){
+      showErr("#e-branch", "이 지사는 이미 있습니다. 다른 세부 지역으로 정해 주세요.");
+      bad = bad || detail;
     }
     if (!bz){
       showErr("#e-biz", "사업자등록 예정지를 입력해 주세요.");
@@ -933,6 +981,17 @@ function bindForm(p){
         branch: branch,
         biz: bz
       });
+      if (res && res.taken){
+        // 그 사이 다른 분이 먼저 제출한 경우
+        if (Array.isArray(res.branches)) takenList = res.branches;
+        paintTaken();
+        go.disabled = false;
+        go.textContent = label;
+        showErr("#e-branch", "방금 다른 분이 먼저 신청하셨습니다. 다른 세부 지역으로 정해 주세요.");
+        syncPreview();
+        detail.focus();
+        return;
+      }
       if (!res || res.ok !== true) throw new Error((res && res.error) || "server");
       const saved = { phone: ph, region: rg, detail: dt, branch: branch, biz: bz };
       setApplied(p, saved);
@@ -956,6 +1015,19 @@ function syncPreview(){
   const v = branchName(($("#f-region") || {}).value, ($("#f-detail") || {}).value);
   el.textContent = v || "지역과 세부 지역을 입력해 주세요";
   el.classList.toggle("empty", !v);
+
+  const dup = isTaken(v);
+  el.classList.toggle("dup", dup);
+  const box = el.closest(".preview");
+  if (box) box.classList.toggle("dup", dup);
+
+  const msg = $("#f-dup");
+  if (msg){
+    msg.textContent = dup ? "이 지사는 이미 있습니다. 다른 세부 지역으로 정해 주세요." : "";
+    msg.hidden = !dup;
+  }
+  const go = $("#f-go");
+  if (go) go.disabled = dup;
 }
 
 function benefitBarHTML(){
