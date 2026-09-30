@@ -236,6 +236,13 @@
     font-size:.82rem;font-weight:700;letter-spacing:.04em;
     color:var(--black);background:var(--white);padding:4px 11px;border-radius:999px;
   }
+  .badge-rej{
+    font-size:.82rem;font-weight:600;letter-spacing:.04em;
+    color:var(--silver-2);background:transparent;border:1px solid var(--hair);
+    padding:3px 11px;border-radius:999px;
+  }
+  .pass.rej .card-top{background:var(--panel)}
+  .pass.rej .headline{font-weight:300}
   .pass .headline{
     margin-top:18px;font-size:clamp(1.45rem,5.6vw,1.85rem);
     font-weight:300;line-height:1.28;letter-spacing:-0.035em;
@@ -485,7 +492,7 @@
     .b-list li{padding-left:34px}
   }
 
-  /* ---------- admin ---------- */
+  /* ---------- admin (밝은 테마) ---------- */
   .adminbar{max-width:var(--maxw);margin:28px auto 0;text-align:center}
   .adminbtn{
     background:transparent;border:1px solid var(--hair-soft);color:var(--silver-3);
@@ -495,72 +502,153 @@
   .adminbtn:hover{border-color:var(--hair);color:var(--silver-2)}
   .adminbtn:focus-visible{outline:2px solid var(--silver-3);outline-offset:3px}
 
-  .admin{width:min(880px,calc(100vw - 24px));max-height:min(90vh,900px)}
-  .admin .modal-body{padding:0}
-  .apad{padding:22px}
-  .atabs{display:flex;border-bottom:1px solid var(--hair-soft);position:sticky;top:0;background:var(--panel);z-index:2}
+  .admin{
+    --bg:#FFFFFF; --soft:#F5F6F7; --line:#E2E4E7; --line2:#EEEFF1;
+    --ink:#16181B; --ink2:#5F636A; --ink3:#9297A0;
+    --ok:#136A3A; --okbg:#E7F5EC; --no:#9A2F2A; --nobg:#FBECEB; --wait:#7A5A12; --waitbg:#FBF3DF;
+    width:min(940px,calc(100vw - 24px));max-height:min(92vh,940px);
+    background:var(--bg);color:var(--ink);border:none;border-radius:6px;
+  }
+  .admin .modal-head{
+    background:var(--bg);border-bottom:1px solid var(--line);padding:20px 24px 18px;
+  }
+  .admin .modal-head .kicker{color:var(--ink3);font-size:.74rem;letter-spacing:.2em}
+  .admin .modal-head h2{color:var(--ink);font-size:1.15rem}
+  .admin .x{border-color:var(--line);color:var(--ink2);background:var(--bg)}
+  .admin .x:hover{border-color:var(--ink3);color:var(--ink)}
+  .admin .modal-body{padding:0;background:var(--bg)}
+
+  .apad{padding:20px 24px 28px}
+  .atabs{
+    display:flex;gap:4px;padding:0 24px;background:var(--bg);
+    border-bottom:1px solid var(--line);position:sticky;top:0;z-index:3;
+  }
   .atabs button{
-    flex:1;padding:15px 8px;background:transparent;border:none;border-bottom:2px solid transparent;
-    color:var(--silver-3);font-size:.92rem;border-radius:0;
+    padding:13px 4px;margin-right:18px;background:transparent;border:none;border-radius:0;
+    border-bottom:2px solid transparent;color:var(--ink3);font-size:.92rem;
   }
-  .atabs button.on{color:var(--white);border-bottom-color:var(--white);font-weight:600}
-  .atabs button:hover{color:var(--silver)}
+  .atabs button.on{color:var(--ink);border-bottom-color:var(--ink);font-weight:700}
+  .atabs button:hover{color:var(--ink2)}
 
+  /* 요약 */
+  .stats{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+  .stat{
+    flex:1 1 auto;min-width:88px;padding:12px 14px;background:var(--soft);
+    border:1px solid var(--line2);border-radius:5px;
+  }
+  .stat b{display:block;font-size:1.3rem;font-weight:700;letter-spacing:-0.02em;line-height:1.2}
+  .stat span{display:block;margin-top:3px;font-size:.8rem;color:var(--ink2)}
+
+  /* 검색 · 필터 */
+  .tools{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+  .tools input{
+    flex:1 1 180px;min-width:0;padding:10px 13px;font:inherit;font-size:.93rem;
+    background:var(--bg);border:1px solid var(--line);border-radius:4px;color:var(--ink);
+  }
+  .tools input::placeholder{color:var(--ink3)}
+  .tools input:focus{outline:none;border-color:var(--ink3)}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chipf{
+    padding:9px 13px;font-size:.86rem;border-radius:999px;
+    background:var(--bg);border:1px solid var(--line);color:var(--ink2);white-space:nowrap;
+  }
+  .chipf.on{background:var(--ink);border-color:var(--ink);color:#fff;font-weight:600}
+  .chipf:hover:not(.on){border-color:var(--ink3);color:var(--ink)}
+
+  /* 명단 */
   .arow{
-    display:flex;align-items:center;gap:10px;padding:13px 0;
-    border-bottom:1px solid var(--hair-soft);font-size:.92rem;
+    display:flex;align-items:center;gap:10px;padding:13px 2px;
+    border-bottom:1px solid var(--line2);font-size:.93rem;
   }
+  .arow:hover{background:var(--soft)}
   .arow .nm{flex:1;min-width:0}
-  .arow .nm b{font-weight:600}
-  .arow .nm span{color:var(--silver-3);font-size:.86rem;margin-left:7px}
-  .arow .nm .meta{display:block;color:var(--silver-3);font-size:.82rem;margin-top:3px}
-  .pill{
-    flex:0 0 auto;padding:6px 11px;font-size:.8rem;border-radius:999px;
-    border:1px solid var(--hair);background:transparent;color:var(--silver-3);white-space:nowrap;
+  .arow .nm b{font-weight:700}
+  .arow .nm span{color:var(--ink3);font-size:.86rem;margin-left:7px}
+  .arow .nm .meta{display:block;color:var(--ink2);font-size:.82rem;margin-top:3px}
+  .sel{
+    flex:0 0 auto;padding:7px 10px;font:inherit;font-size:.84rem;font-weight:600;
+    border-radius:999px;border:1px solid var(--line);cursor:pointer;
+    -webkit-appearance:none;appearance:none;padding-right:26px;
+    background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);
+    background-position:calc(100% - 14px) 52%,calc(100% - 9px) 52%;
+    background-size:5px 5px,5px 5px;background-repeat:no-repeat;
   }
-  .pill.on{background:var(--white);color:var(--black);border-color:var(--white);font-weight:700}
+  .sel.s합격{background-color:var(--okbg);color:var(--ok);border-color:#BFE3CD}
+  .sel.s불합격{background-color:var(--nobg);color:var(--no);border-color:#EFC9C6}
+  .sel.s대기{background-color:var(--waitbg);color:var(--wait);border-color:#EBDCAE}
   .mini{
-    flex:0 0 auto;padding:6px 10px;font-size:.82rem;background:transparent;
-    border:1px solid var(--hair);color:var(--silver-2);white-space:nowrap;
+    flex:0 0 auto;padding:7px 11px;font-size:.84rem;background:var(--bg);
+    border:1px solid var(--line);color:var(--ink2);border-radius:4px;white-space:nowrap;
   }
-  .mini:hover{border-color:var(--silver-2);color:var(--white)}
-  .mini.dgr:hover{border-color:#8C5350;color:#D79A97}
+  .mini:hover{border-color:var(--ink3);color:var(--ink)}
+  .mini.dgr:hover{border-color:#E0B3B0;color:var(--no);background:var(--nobg)}
 
-  .aform{padding:18px;background:var(--panel-2);border-radius:3px;margin-bottom:18px}
-  .aform h3{margin:0 0 14px;font-size:.95rem;font-weight:600}
-  .aform .two{display:flex;gap:9px}
+  /* 입력 폼 */
+  .aform{padding:18px;background:var(--soft);border:1px solid var(--line2);border-radius:5px;margin-bottom:18px}
+  .aform h3{margin:0 0 15px;font-size:.98rem;font-weight:700;color:var(--ink)}
+  .aform .two{display:flex;gap:10px}
   .aform .fld{margin-bottom:13px}
-  .aform label{display:block;font-size:.85rem;color:var(--silver-2);margin-bottom:6px}
-  .aform input{
-    width:100%;padding:11px 13px;background:var(--panel);border:1px solid var(--hair);
-    border-radius:2px;color:var(--white);font:inherit;font-size:.95rem;
+  .aform label{display:block;font-size:.84rem;color:var(--ink2);margin-bottom:6px}
+  .aform input, .aform select{
+    width:100%;padding:11px 13px;background:var(--bg);border:1px solid var(--line);
+    border-radius:4px;color:var(--ink);font:inherit;font-size:.95rem;
   }
-  .aform input:focus{outline:none;border-color:var(--silver)}
-  .achk{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.92rem;margin:4px 0 14px}
-  .achk input{width:19px;height:19px;accent-color:#fff;cursor:pointer}
-  .abtns{display:flex;gap:8px}
-  .abtns button{flex:1;padding:12px;font-size:.92rem}
-  .abtns .go2{background:var(--white);color:var(--black);font-weight:600}
-  .abtns .go2:hover{background:var(--silver)}
-  .abtns .cx{background:transparent;border:1px solid var(--hair);color:var(--silver)}
+  .aform input:focus, .aform select:focus{outline:none;border-color:var(--ink3)}
+  .aform .hintx{margin:6px 0 0;font-size:.8rem;color:var(--ink3)}
+  .abtns{display:flex;gap:8px;margin-top:4px}
+  .abtns button{flex:1;padding:12px;font-size:.93rem;border-radius:4px}
+  .abtns .go2{background:var(--ink);color:#fff;font-weight:700;border:1px solid var(--ink)}
+  .abtns .go2:hover{background:#000}
+  .abtns .cx{background:var(--bg);border:1px solid var(--line);color:var(--ink2)}
+  .abtns .cx:hover{border-color:var(--ink3);color:var(--ink)}
+  .addbtn{
+    display:block;width:100%;margin-bottom:18px;padding:13px;border-radius:4px;
+    background:var(--bg);border:1px dashed var(--line);color:var(--ink2);font-size:.93rem;
+  }
+  .addbtn:hover{border-color:var(--ink3);color:var(--ink);background:var(--soft)}
 
-  .sub{padding:15px 0;border-bottom:1px solid var(--hair-soft)}
+  /* 제출 내역 · 조회 현황 */
+  .sub{padding:15px 2px;border-bottom:1px solid var(--line2)}
+  .sub:hover{background:var(--soft)}
   .sub .t{display:flex;gap:9px;align-items:baseline;flex-wrap:wrap}
-  .sub .t b{font-size:.98rem;font-weight:600}
-  .sub .t .br{color:var(--white);font-size:.95rem}
-  .sub .t .at{color:var(--silver-3);font-size:.82rem;margin-left:auto}
-  .sub .d{margin-top:7px;color:var(--silver-2);font-size:.88rem;line-height:1.7}
-  .sub .d span{color:var(--silver-3)}
-  .amsg{padding:26px 0;text-align:center;color:var(--silver-3);font-size:.9rem}
-  /* 좁은 화면에서는 이름을 한 줄 차지하게 하고 버튼을 아래로 내린다 */
-  @media (max-width:420px){
+  .sub .t b{font-size:1rem;font-weight:700}
+  .sub .t .br{color:var(--ink);font-size:.95rem;font-weight:600}
+  .sub .t .at{color:var(--ink3);font-size:.82rem;margin-left:auto}
+  .sub .d{margin-top:7px;color:var(--ink2);font-size:.88rem;line-height:1.7}
+  .sub .d span{color:var(--ink3)}
+  .sub .acts2{margin-top:9px}
+  .amsg{padding:34px 0;text-align:center;color:var(--ink3);font-size:.92rem}
+  .acount{font-size:.85rem;color:var(--ink2);margin:0 0 12px}
+  .aerrbox{
+    margin:0 0 14px;padding:11px 13px;background:var(--nobg);border:1px solid #EFC9C6;
+    border-radius:4px;color:var(--no);font-size:.88rem;
+  }
+
+  /* 로그인 */
+  .alogin{max-width:340px;margin:22px auto 30px}
+  .alogin label{display:block;font-size:.88rem;color:var(--ink2);margin-bottom:7px}
+  .alogin input{
+    width:100%;padding:13px 14px;font:inherit;font-size:1rem;border-radius:4px;
+    background:var(--bg);border:1px solid var(--line);color:var(--ink);
+  }
+  .alogin input:focus{outline:none;border-color:var(--ink3)}
+  .alogin .submit{
+    margin-top:14px;width:100%;padding:14px;background:var(--ink);color:#fff;
+    font-weight:700;font-size:.98rem;border-radius:4px;
+  }
+  .alogin .submit:hover{background:#000}
+  .alogin .err{color:var(--no);margin:8px 0 0;font-size:.86rem}
+
+  @media (max-width:520px){
+    .apad{padding:18px 16px 24px}
+    .atabs{padding:0 16px}
+    .admin .modal-head{padding:17px 16px 15px}
     .arow{flex-wrap:wrap}
-    .arow .nm{flex:1 0 100%;margin-bottom:10px}
-    .arow .pill,.arow .mini{flex:1;text-align:center}
+    .arow .nm{flex:1 0 100%;margin-bottom:9px}
+    .arow .sel,.arow .mini{flex:1}
     .aform .two{flex-direction:column;gap:0}
     .sub .t .at{margin-left:0;flex:1 0 100%}
   }
-  .acount{font-size:.84rem;color:var(--silver-3);margin:0 0 14px}
 
   /* ---------- bottom contact ---------- */
   .contact{
@@ -1369,6 +1457,21 @@ async function loadRoster(){
   }
 }
 
+function rejectedHTML(p){
+  return `
+  <div class="card pass rej reveal">
+    <div class="card-top">
+      <div class="who"><strong>${esc(p.name)}</strong>${p.alias ? ` <span class="badge-rej">결과 안내</span>` : ""}</div>
+      <div class="headline">이번에는 함께하지<br>못하게 되었습니다</div>
+      <p class="congrat">신중하게 검토한 끝에 아쉬운 결과를 전해 드리게 되었습니다. 바쁘신 중에도 시간 내어 면접에 참여해 주신 점 진심으로 감사드리며, 다음 기회에 다시 뵐 수 있기를 바랍니다.</p>
+    </div>
+    <div class="sec">
+      <p class="sec-lede">문의하실 내용이 있으시면 아래로 연락해 주세요.</p>
+      <a class="ghost wide" href="${KAKAO}" target="_blank" rel="noopener">카카오톡으로 문의하기</a>
+    </div>
+  </div>`;
+}
+
 function notYetHTML(p){
   return `
   <div class="card pass reveal">
@@ -1414,8 +1517,13 @@ function renderPerson(p){
   current = p;
   subChecked = false;
   logView(p);
-  let html = p.pass ? passHTML(p) : notYetHTML(p);
-  if (validDate(p.date) && p.h) html += cardHTML(p);   // 제대로 된 면접 일정이 있을 때만
+  const st = p.status || (p.pass ? "합격" : "대기");
+  let html = st === "합격" ? passHTML(p)
+           : st === "불합격" ? rejectedHTML(p)
+           : notYetHTML(p);
+  // 결과가 나온 뒤에는 지난 면접 일정을 다시 띄우지 않는다
+  if (st === "대기" && validDate(p.date) && p.h) html += cardHTML(p);
+  else if (st === "합격" && validDate(p.date) && p.h) html += cardHTML(p);
   render(html);
 }
 
@@ -1479,17 +1587,19 @@ function search(){
 // ============ 관리자 ============
 let adminData = null;
 let adminTab = "people";
-let editing = null;          // null | "new" | row 번호
+let editing = null;                 // null | "new" | row 번호
+let aQuery = "";
+let aFilter = "전체";
+const STATUSES = ["합격", "불합격", "대기"];
 
 function adminPw(){ try { return sessionStorage.getItem("abyss-adm") || ""; } catch (e) { return ""; } }
 function setAdminPw(v){ try { v ? sessionStorage.setItem("abyss-adm", v) : sessionStorage.removeItem("abyss-adm"); } catch (e) {} }
 
 function adminCall(act, extra){
-  const q = Object.assign({ type: "admin", act: act, pw: adminPw() }, extra || {});
-  return jsonp(LOG_URL, q, 20000);
+  return jsonp(LOG_URL, Object.assign({ type: "admin", act: act, pw: adminPw() }, extra || {}), 20000);
 }
 
-// "오후 3시" → 15. 관리자가 시(24h)를 직접 입력하지 않아도 되게.
+// "오후 3시" → 15
 function parseHour(t){
   const m = String(t || "").match(/(오전|오후|낮)\s*(\d{1,2})\s*시/);
   if (!m) return 0;
@@ -1504,12 +1614,10 @@ function adminBody(html){ $("#admin-body").innerHTML = html; }
 function loginHTML(msg){
   return `
   <div class="apad">
-    <form id="alogin" novalidate>
-      <div class="fld">
-        <label for="apw">비밀번호</label>
-        <input id="apw" type="password" autocomplete="current-password" placeholder="비밀번호를 입력하세요">
-        <p class="err" id="aerr"${msg ? "" : " hidden"}>${msg ? esc(msg) : ""}</p>
-      </div>
+    <form class="alogin" id="alogin" novalidate>
+      <label for="apw">비밀번호</label>
+      <input id="apw" type="password" autocomplete="current-password" placeholder="비밀번호를 입력하세요">
+      ${msg ? `<p class="err">${esc(msg)}</p>` : ""}
       <button class="submit" type="submit" id="ago">로그인</button>
     </form>
   </div>`;
@@ -1518,17 +1626,69 @@ function loginHTML(msg){
 function panelHTML(){
   return `
   <div class="atabs">
-    <button type="button" data-tab="people" class="${adminTab === "people" ? "on" : ""}">합격자 관리</button>
-    <button type="button" data-tab="subs" class="${adminTab === "subs" ? "on" : ""}">제출 내역</button>
+    <button type="button" data-tab="people" class="${adminTab === "people" ? "on" : ""}">명단</button>
+    <button type="button" data-tab="subs" class="${adminTab === "subs" ? "on" : ""}">지사 신청</button>
+    <button type="button" data-tab="views" class="${adminTab === "views" ? "on" : ""}">조회 현황</button>
   </div>
-  <div class="apad" id="apanel">${adminTab === "people" ? peopleHTML() : subsHTML()}</div>`;
+  <div class="apad" id="apanel">${tabHTML()}</div>`;
+}
+
+function tabHTML(){
+  if (adminTab === "subs") return subsHTML();
+  if (adminTab === "views") return viewsHTML();
+  return peopleHTML();
+}
+
+function statsHTML(){
+  const ppl = (adminData && adminData.people) || [];
+  const subs = (adminData && adminData.subs) || [];
+  const n = st => ppl.filter(x => x.status === st).length;
+  const cell = (v, l) => `<div class="stat"><b>${v}</b><span>${l}</span></div>`;
+  return `<div class="stats">
+    ${cell(ppl.length, "전체")}${cell(n("합격"), "합격")}${cell(n("불합격"), "불합격")}
+    ${cell(n("대기"), "대기")}${cell(subs.length, "지사 신청")}
+  </div>`;
+}
+
+function toolsHTML(){
+  const chip = v => `<button type="button" class="chipf${aFilter === v ? " on" : ""}" data-f="${v}">${v}</button>`;
+  return `<div class="tools">
+    <input id="asearch" type="text" placeholder="이름 또는 활동명 검색" value="${esc(aQuery)}" autocomplete="off">
+    <div class="chips">${["전체"].concat(STATUSES).map(chip).join("")}</div>
+  </div>`;
+}
+
+function visiblePeople(){
+  const q = norm(aQuery);
+  return ((adminData && adminData.people) || []).filter(x => {
+    if (aFilter !== "전체" && x.status !== aFilter) return false;
+    if (!q) return true;
+    return norm(x.name).includes(q) || norm(x.alias).includes(q);
+  });
+}
+
+function listHTML(){
+  const list = visiblePeople();
+  if (!list.length) return `<p class="amsg">${aQuery || aFilter !== "전체" ? "조건에 맞는 사람이 없습니다." : "아직 등록된 사람이 없습니다."}</p>`;
+  return list.map(x => `
+    <div class="arow">
+      <span class="nm">
+        <b>${esc(x.name)}</b>${x.alias ? `<span>${esc(x.alias)}</span>` : ""}
+        ${x.date ? `<span class="meta">${esc(x.date)} ${esc(x.time)}</span>` : `<span class="meta">면접 일정 미정</span>`}
+      </span>
+      <select class="sel s${x.status}" data-status="${x.row}" aria-label="${esc(x.name)} 상태">
+        ${STATUSES.map(v => `<option value="${v}"${x.status === v ? " selected" : ""}>${v}</option>`).join("")}
+      </select>
+      <button class="mini" type="button" data-edit="${x.row}">수정</button>
+      <button class="mini dgr" type="button" data-del="${x.row}">삭제</button>
+    </div>`).join("");
 }
 
 function personFormHTML(x){
-  const v = x || { name: "", alias: "", pass: false, date: "", time: "" };
+  const v = x || { name: "", alias: "", status: "대기", date: "", time: "" };
   return `
   <div class="aform">
-    <h3>${x ? "정보 수정" : "합격자 추가"}</h3>
+    <h3>${x ? "정보 수정" : "면접자 추가"}</h3>
     <div class="two">
       <div class="fld" style="flex:1">
         <label for="e-name">이름</label>
@@ -1541,19 +1701,23 @@ function personFormHTML(x){
     </div>
     <div class="two">
       <div class="fld" style="flex:1">
-        <label for="e-date">면접일 (선택)</label>
-        <input id="e-date" type="text" value="${esc(v.date)}" placeholder="2026-09-10">
+        <label for="e-date">면접일</label>
+        <input id="e-date" type="date" value="${esc(v.date)}">
       </div>
       <div class="fld" style="flex:1">
-        <label for="e-time">면접시간 (선택)</label>
+        <label for="e-time">면접시간</label>
         <input id="e-time" type="text" value="${esc(v.time)}" placeholder="오후 3시">
+        <p class="hintx">오전 11시 / 낮 12시 / 오후 3시 형태로 적어주세요.</p>
       </div>
     </div>
-    <label class="achk" for="e-pass">
-      <input id="e-pass" type="checkbox"${v.pass ? " checked" : ""}>
-      <span>합격 처리 — 체크하면 이 분에게 지사 설립 폼이 보입니다</span>
-    </label>
-    <p class="err" id="e-err" hidden></p>
+    <div class="fld">
+      <label for="e-status">상태</label>
+      <select id="e-status">
+        ${STATUSES.map(t => `<option value="${t}"${v.status === t ? " selected" : ""}>${t}</option>`).join("")}
+      </select>
+      <p class="hintx">합격이면 지사 설립 폼이 보이고, 대기는 준비 중 안내, 불합격은 결과 안내가 나갑니다.</p>
+    </div>
+    <p class="aerrbox" id="e-err" hidden></p>
     <div class="abtns">
       <button type="button" class="cx" id="e-cancel">취소</button>
       <button type="button" class="go2" id="e-save">저장</button>
@@ -1565,27 +1729,17 @@ function peopleHTML(){
   const list = (adminData && adminData.people) || [];
   const cur = editing && editing !== "new"
     ? list.filter(x => String(x.row) === String(editing))[0] : null;
-  const form = editing ? personFormHTML(cur) : "";
-  const pass = list.filter(x => x.pass).length;
   return `
-    ${form}
-    ${editing ? "" : `<button class="ghost wide" type="button" id="e-new" style="margin:0 0 18px">합격자 추가</button>`}
-    <p class="acount">전체 ${list.length}명 · 합격 ${pass}명</p>
-    ${list.length ? list.map(x => `
-      <div class="arow">
-        <span class="nm">
-          <b>${esc(x.name)}</b>${x.alias ? `<span>${esc(x.alias)}</span>` : ""}
-          ${x.date ? `<span class="meta">${esc(x.date)} ${esc(x.time)}</span>` : ""}
-        </span>
-        <button class="pill${x.pass ? " on" : ""}" type="button" data-pass="${x.row}" data-to="${x.pass ? "N" : "Y"}">${x.pass ? "합격" : "미합격"}</button>
-        <button class="mini" type="button" data-edit="${x.row}">수정</button>
-        <button class="mini dgr" type="button" data-del="${x.row}">삭제</button>
-      </div>`).join("") : `<p class="amsg">아직 등록된 사람이 없습니다.</p>`}`;
+    ${statsHTML()}
+    ${editing ? personFormHTML(cur) : `<button class="addbtn" type="button" id="e-new">+ 면접자 추가</button>`}
+    ${toolsHTML()}
+    <div id="alist">${listHTML()}</div>`;
 }
 
 function subsHTML(){
   const list = (adminData && adminData.subs) || [];
   return `
+    ${statsHTML()}
     <p class="acount">지사 신청 ${list.length}건</p>
     ${list.length ? list.map(x => `
       <div class="sub">
@@ -1598,7 +1752,26 @@ function subsHTML(){
           <span>전화</span> ${esc(x.phone)} &nbsp;·&nbsp;
           <span>사업자등록 예정지</span> ${esc(x.biz)}
         </div>
+        <div class="acts2"><button class="mini dgr" type="button" data-delsub="${x.row}">신청 삭제</button></div>
       </div>`).join("") : `<p class="amsg">아직 제출된 신청이 없습니다.</p>`}`;
+}
+
+function viewsHTML(){
+  const list = (adminData && adminData.views) || [];
+  const people = (adminData && adminData.people) || [];
+  const seen = {};
+  list.forEach(v => { seen[v.name] = v; });
+  const never = people.filter(x => !seen[x.name]);
+  return `
+    ${statsHTML()}
+    <p class="acount">조회한 사람 ${list.length}명 · 아직 안 본 사람 ${never.length}명</p>
+    ${never.length ? `<div class="aerrbox">아직 확인하지 않음 — ${never.map(x => esc(x.name)).join(", ")}</div>` : ""}
+    ${list.length ? list.map(v => `
+      <div class="arow">
+        <span class="nm"><b>${esc(v.name)}</b>${v.alias ? `<span>${esc(v.alias)}</span>` : ""}
+          <span class="meta">마지막 조회 ${esc(v.last) || "-"}</span></span>
+        <span class="mini">${v.count}회</span>
+      </div>`).join("") : `<p class="amsg">아직 조회 기록이 없습니다.</p>`}`;
 }
 
 async function openAdmin(){
@@ -1610,8 +1783,8 @@ async function openAdmin(){
     await refreshAdmin();
   } else {
     adminBody(loginHTML(""));
+    bindAdmin();
   }
-  bindAdmin();
 }
 
 function closeAdmin(){
@@ -1632,15 +1805,43 @@ async function refreshAdmin(){
   }
 }
 
+function repaintPanel(){ $("#apanel").innerHTML = tabHTML(); bindAdmin(); }
+function repaintList(){ const el = $("#alist"); if (el){ el.innerHTML = listHTML(); bindRows(); } }
+
+function bindRows(){
+  $$("[data-status]").forEach(sel => sel.addEventListener("change", async () => {
+    sel.disabled = true;
+    try {
+      const r = await adminCall("status", { row: sel.dataset.status, status: sel.value });
+      if (r && r.ok){ adminData.people = r.people; repaintPanel(); }
+      else sel.disabled = false;
+    } catch (e) { sel.disabled = false; }
+  }));
+
+  $$("[data-edit]").forEach(b => b.addEventListener("click", () => {
+    editing = b.dataset.edit; repaintPanel();
+    const f = $(".aform"); if (f) f.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }));
+
+  $$("[data-del]").forEach(b => b.addEventListener("click", async () => {
+    const who = (adminData.people.filter(x => String(x.row) === String(b.dataset.del))[0] || {}).name || "";
+    if (!window.confirm(`${who} 님을 명단에서 삭제할까요?\n조회 페이지에서도 즉시 사라집니다.`)) return;
+    b.disabled = true;
+    try {
+      const r = await adminCall("del", { row: b.dataset.del });
+      if (r && r.ok){ adminData.people = r.people; repaintPanel(); } else b.disabled = false;
+    } catch (e) { b.disabled = false; }
+  }));
+}
+
 function bindAdmin(){
   const form = $("#alogin");
   if (form){
     form.addEventListener("submit", async e => {
       e.preventDefault();
       const pw = $("#apw").value.trim();
-      const err = $("#aerr"), go = $("#ago");
-      err.hidden = true;
-      if (!pw){ err.textContent = "비밀번호를 입력해 주세요."; err.hidden = false; return; }
+      const go = $("#ago");
+      if (!pw){ adminBody(loginHTML("비밀번호를 입력해 주세요.")); bindAdmin(); return; }
       go.disabled = true; go.textContent = "확인 중…";
       setAdminPw(pw);
       try {
@@ -1648,7 +1849,7 @@ function bindAdmin(){
         if (!r || r.ok !== true) throw new Error("auth");
         adminBody(`<p class="amsg">불러오는 중…</p>`);
         await refreshAdmin();
-      } catch (err2) {
+      } catch (e2) {
         setAdminPw("");
         adminBody(loginHTML("비밀번호가 맞지 않습니다."));
         bindAdmin();
@@ -1662,15 +1863,20 @@ function bindAdmin(){
     adminBody(panelHTML()); bindAdmin();
   }));
 
-  const nw = $("#e-new");
-  if (nw) nw.addEventListener("click", () => { editing = "new"; adminBody(panelHTML()); bindAdmin(); });
+  const sch = $("#asearch");
+  if (sch) sch.addEventListener("input", () => { aQuery = sch.value; repaintList(); });
 
-  $$("[data-edit]").forEach(b => b.addEventListener("click", () => {
-    editing = b.dataset.edit; adminBody(panelHTML()); bindAdmin();
+  $$("[data-f]").forEach(b => b.addEventListener("click", () => {
+    aFilter = b.dataset.f;
+    $$("[data-f]").forEach(x => x.classList.toggle("on", x.dataset.f === aFilter));
+    repaintList();
   }));
 
+  const nw = $("#e-new");
+  if (nw) nw.addEventListener("click", () => { editing = "new"; repaintPanel(); });
+
   const cancel = $("#e-cancel");
-  if (cancel) cancel.addEventListener("click", () => { editing = null; adminBody(panelHTML()); bindAdmin(); });
+  if (cancel) cancel.addEventListener("click", () => { editing = null; repaintPanel(); });
 
   const save = $("#e-save");
   if (save) save.addEventListener("click", async () => {
@@ -1685,42 +1891,32 @@ function bindAdmin(){
         row: editing === "new" ? "" : editing,
         name: name,
         alias: $("#e-alias").value.trim(),
-        pass: $("#e-pass").checked ? "Y" : "N",
+        status: $("#e-status").value,
         date: $("#e-date").value.trim(),
         time: time,
         h: parseHour(time)
       });
-      if (!r || r.ok !== true) throw new Error((r && r.error) || "save");
+      if (!r || r.ok !== true) throw new Error((r && r.error) || "저장하지 못했습니다.");
       adminData.people = r.people;
       editing = null;
-      adminBody(panelHTML()); bindAdmin();
+      repaintPanel();
     } catch (e2) {
       save.disabled = false; save.textContent = "저장";
-      err.textContent = String(e2.message || e2) === "save" ? "저장하지 못했습니다." : String(e2.message || e2);
+      err.textContent = String(e2.message || e2);
       err.hidden = false;
     }
   });
 
-  $$("[data-pass]").forEach(b => b.addEventListener("click", async () => {
+  $$("[data-delsub]").forEach(b => b.addEventListener("click", async () => {
+    if (!window.confirm("이 지사 신청을 삭제할까요?\n삭제하면 해당 지사명을 다시 사용할 수 있게 됩니다.")) return;
     b.disabled = true;
     try {
-      const r = await adminCall("pass", { row: b.dataset.pass, pass: b.dataset.to });
-      if (r && r.ok){ adminData.people = r.people; adminBody(panelHTML()); bindAdmin(); }
-      else b.disabled = false;
-    } catch (e3) { b.disabled = false; }
+      const r = await adminCall("delsub", { row: b.dataset.delsub });
+      if (r && r.ok) await refreshAdmin(); else b.disabled = false;
+    } catch (e) { b.disabled = false; }
   }));
 
-  $$("[data-del]").forEach(b => b.addEventListener("click", async () => {
-    const row = b.dataset.del;
-    const who = (adminData.people.filter(x => String(x.row) === String(row))[0] || {}).name || "";
-    if (!window.confirm(`${who} 님을 명단에서 삭제할까요?\n조회 페이지에서도 즉시 사라집니다.`)) return;
-    b.disabled = true;
-    try {
-      const r = await adminCall("del", { row: row });
-      if (r && r.ok){ adminData.people = r.people; adminBody(panelHTML()); bindAdmin(); }
-      else b.disabled = false;
-    } catch (e4) { b.disabled = false; }
-  }));
+  bindRows();
 }
 
 $("#adminopen").addEventListener("click", openAdmin);
