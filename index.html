@@ -233,7 +233,7 @@
   .pass{margin-top:32px}
   .pass .card-top{background:var(--panel-2)}
   .badge-pass{
-    font-size:.78rem;font-weight:700;letter-spacing:.06em;
+    font-size:.82rem;font-weight:700;letter-spacing:.04em;
     color:var(--black);background:var(--white);padding:4px 11px;border-radius:999px;
   }
   .pass .headline{
@@ -259,6 +259,49 @@
   }
   .warn b{color:var(--white);font-weight:600}
 
+  .subh{
+    margin:24px 0 9px;font-size:.9rem;font-weight:600;color:var(--white);
+    letter-spacing:-0.01em;
+  }
+  .subh:first-of-type{margin-top:18px}
+  .ptxt{margin:0 0 10px;color:var(--silver-2);font-size:.9rem;line-height:1.72}
+  .ptxt:last-child{margin-bottom:0}
+  .ptxt b{color:var(--white);font-weight:600}
+
+  .bd{display:flex;align-items:flex-start;justify-content:center;flex-wrap:wrap;margin:14px 0 4px}
+  .bd .grp{display:flex;align-items:flex-start}
+  .bd .tok{text-align:center}
+  .bd .tok .t{
+    display:block;padding:8px 9px;border:1px solid var(--hair);border-radius:2px;
+    background:var(--panel);font-size:.9rem;font-weight:600;white-space:nowrap;
+  }
+  .bd .tok.fix .t{color:var(--silver-2);font-weight:400;border-style:dashed}
+  .bd .tok .c{display:block;margin-top:6px;font-size:.82rem;color:var(--silver-3);white-space:nowrap}
+  .bd .plus{padding:9px 5px;color:var(--silver-3);font-size:.88rem}
+
+  .units{margin:10px 0 0;padding:0;list-style:none}
+  .units li{
+    position:relative;padding:0 0 7px 13px;font-size:.88rem;color:var(--silver-2);line-height:1.7;
+  }
+  .units li:last-child{padding-bottom:0}
+  .units li:before{
+    content:"";position:absolute;left:0;top:11px;width:3px;height:3px;
+    border-radius:50%;background:var(--silver-3);
+  }
+  .units b{color:var(--white);font-weight:600}
+
+  .cmp{margin-top:12px;border-top:1px solid var(--hair-soft)}
+  .cmp .r{
+    display:flex;gap:11px;align-items:flex-start;
+    padding:13px 0;border-bottom:1px solid var(--hair-soft);font-size:.88rem;
+  }
+  .cmp .m{flex:0 0 16px;font-weight:700;line-height:1.6}
+  .cmp .r.ok .m{color:var(--white)}
+  .cmp .r.no .m{color:var(--silver-3)}
+  .cmp .d{flex:1;min-width:0;color:var(--silver-2);line-height:1.65}
+  .cmp .d .top{display:block;color:var(--white);font-weight:600;margin-bottom:4px}
+  .cmp .r.no .d .top{color:var(--silver-2);text-decoration:line-through;text-decoration-color:var(--silver-3)}
+
   .form{margin-top:20px}
   .fld{margin-bottom:17px}
   .fld:last-of-type{margin-bottom:0}
@@ -281,7 +324,7 @@
     margin-top:11px;padding:15px 16px;background:var(--black);
     border:1px solid var(--hair);border-radius:2px;text-align:center;
   }
-  .preview .lbl{font-size:.76rem;color:var(--silver-3);letter-spacing:.18em;display:block;margin-bottom:7px}
+  .preview .lbl{font-size:.82rem;color:var(--silver-3);letter-spacing:.16em;display:block;margin-bottom:7px}
   .preview .val{font-size:1.12rem;font-weight:600;letter-spacing:-0.02em}
   .preview .val.empty{color:var(--silver-3);font-weight:400;font-size:.95rem}
   .err{margin:7px 0 0;font-size:.84rem;color:#D79A97}
@@ -298,7 +341,7 @@
 
   .done{padding:4px 0 0}
   .done .ok{
-    display:inline-block;font-size:.78rem;font-weight:700;color:var(--black);
+    display:inline-block;font-size:.82rem;font-weight:700;color:var(--black);
     background:var(--white);padding:4px 11px;border-radius:999px;margin-bottom:14px;
   }
   .done h3{margin:0 0 14px;font-size:1.05rem;font-weight:600;letter-spacing:-0.02em}
@@ -732,14 +775,49 @@ function passHTML(p){
     </div>
 
     <div class="sec">
-      <h2>지사명 정하기</h2>
-      <p class="sec-lede">앞으로 '어비스 ○○지사'로 활동하시게 됩니다.</p>
+      <h2>어비스 지사 설립 안내</h2>
+      <p class="sec-lede">이제 본격적으로 사업자 등록과 함께 지역별 지사 설립을 진행할 시기입니다.</p>
+
+      <p class="subh">지사장이 된다는 것</p>
+      <p class="ptxt">앞으로 각자 배정된 지사명을 통해 <b>'어비스 ○○지사'</b>로 활동하시게 됩니다. 어비스의 지사는 단순한 수강생 모임이 아니라, 각 지역에서 어비스의 브랜드와 시스템을 기반으로 마케팅 사업을 운영하는 <b>공식 파트너 조직</b>입니다.</p>
+      <p class="ptxt">혼자 시작하는 1인 사업자가 아니라, 본사의 시스템과 지원을 받으며 성장하는 지역 대표 사업자가 되시는 것입니다.</p>
+
+      <p class="subh">지사명 양식</p>
       <div class="naming">
-        <p class="rule">어비스 + <b>지역</b> + <b>세부지역</b> + 지사</p>
-        <div class="egs">${BRANCH_EGS.map(e => `<span class="eg">${esc(e)}</span>`).join("")}</div>
+        <div class="bd">
+          <span class="grp"><span class="tok fix"><span class="t">어비스</span><span class="c">고정</span></span></span>
+          <span class="grp"><span class="plus">+</span><span class="tok"><span class="t">서울</span><span class="c">지역</span></span></span>
+          <span class="grp"><span class="plus">+</span><span class="tok"><span class="t">마곡</span><span class="c">세부지역</span></span></span>
+          <span class="grp"><span class="plus">+</span><span class="tok fix"><span class="t">지사</span><span class="c">고정</span></span></span>
+        </div>
+        <ul class="units">
+          <li><b>지역</b>은 시 단위로 적어 주세요. (서울, 성남, 대전, 부산 등)</li>
+          <li><b>세부지역</b>은 <b>역 · 동 · 구</b> 단위 중 원하시는 단위로 정하시면 됩니다.</li>
+        </ul>
       </div>
+      <div class="egs">${BRANCH_EGS.map(e => `<span class="eg">${esc(e)}</span>`).join("")}</div>
+
+      <p class="subh">사업자등록 예정지와 맞아야 합니다</p>
+      <p class="ptxt">지사가 되시면 사업자등록을 함께 진행하게 됩니다. 이때 <b>사업자등록지와 지사명의 지역이 너무 멀면 지사명을 확정해 드릴 수 없습니다.</b> 실제로 등록하실 지역을 기준으로 지사명을 정해 주세요.</p>
+      <div class="cmp">
+        <div class="r ok">
+          <span class="m">O</span>
+          <span class="d">
+            <span class="top">어비스 서울 노원지사</span>
+            사업자등록 예정지가 서울 노원구인 경우
+          </span>
+        </div>
+        <div class="r no">
+          <span class="m">X</span>
+          <span class="d">
+            <span class="top">어비스 서울 마곡지사</span>
+            사업자등록 예정지는 노원구인데 지사명만 마곡으로 정한 경우
+          </span>
+        </div>
+      </div>
+
       <div class="warn">
-        <b>먼저 신청하신 분이 선점합니다.</b> 한 번 확정된 지역은 다른 지사와 겹치지 않도록 운영되니, 원하시는 지역이 있다면 빠르게 전달해 주세요.
+        <b>먼저 신청하신 분이 선점합니다.</b> 한 번 확정된 지역은 다른 지사와 겹치지 않도록 운영될 예정입니다. 원하시는 지역이 있다면 선점될 수 있으니 빠르게 전달해 주세요.
       </div>
     </div>
 
