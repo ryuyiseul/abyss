@@ -589,7 +589,10 @@ const DATA = [
   {name:"백명주", alias:"프레스런 구슬",   date:"2026-09-18", time:"오전 11시", h:11},
   {name:"박효진", alias:"효진",           date:"2026-09-18", time:"오후 2시",  h:14},
   {name:"김현아", alias:"부산다다",        date:"2026-09-18", time:"오후 3시",  h:15},
-  {name:"신지수", alias:"프레스런 도도",   date:"2026-09-18", time:"오후 4시",  h:16}
+  {name:"신지수", alias:"프레스런 도도",   date:"2026-09-18", time:"오후 4시",  h:16},
+
+  // 동작 확인용 테스트 항목. 테스트가 끝나면 이 한 줄만 지우면 됩니다.
+  {name:"류이슬", alias:"알스터",          date:"2026-09-18", time:"오후 5시",  h:17}
 ];
 
 const $ = s => document.querySelector(s);
@@ -1067,10 +1070,18 @@ function keysOf(p){
   const k = new Set();
   const add = v => { const n = norm(v); if (n) k.add(n); };
   const alias = p.alias || "";
+  const bare = alias.replace(/프레스런/g, "").trim();
   add(p.name);
   add(alias);
-  add(alias.replace(/프레스런/g, ""));
+  add(bare);
   alias.split(/\s+/).forEach(add);
+  // 활동명과 성함을 함께 적는 경우. norm()이 공백을 지우므로
+  // "알스터 류이슬"과 "알스터류이슬"이 같은 키가 된다.
+  [alias, bare].forEach(a => {
+    if (!a) return;
+    add(a + p.name);
+    add(p.name + a);
+  });
   return [...k];
 }
 
