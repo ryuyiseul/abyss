@@ -784,8 +784,14 @@ const norm = s => (s||"").replace(/\s+/g,"").toLowerCase();
 const esc = s => s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const DOW = ["일","월","화","수","목","금","토"];
 
-function fmtDate(iso){
+function validDate(iso){
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(iso || ""))) return null;
   const d = new Date(iso + "T00:00:00");
+  return isNaN(d.getTime()) ? null : d;
+}
+function fmtDate(iso){
+  const d = validDate(iso);
+  if (!d) return "";
   return `${d.getMonth()+1}월 ${d.getDate()}일 ${DOW[d.getDay()]}요일`;
 }
 function dday(iso,h){
@@ -824,7 +830,7 @@ const FAQ_BOOKED = [
   ...FAQ_KIT
 ];
 
-const BRANCH_EGS = ["어비스 서울 마곡지사","어비스 성남 분당지사","어비스 대전 둔산지사","어비스 부산 해운대지사"];
+const BRANCH_EGS = ["EX) 어비스 서울 마곡지사","EX) 어비스 성남 분당지사","EX) 어비스 대전 둔산지사","EX) 어비스 부산 해운대지사"];
 
 // 이미 사용 중인 지사명. null = 아직 확인 못 함(서버가 제출 시 최종 판정).
 let takenList = null;
@@ -896,14 +902,15 @@ function branchName(region, detail){
 }
 
 function doneHTML(d){
+  const row = (k, v) => v ? `<div><span class="k">${k}</span><span class="v">${esc(v)}</span></div>` : "";
   return `
   <div class="done">
     <span class="ok">제출 완료</span>
     <h3>전달해 주셔서 감사합니다</h3>
     <div class="recap">
-      <div><span class="k">지사명</span><span class="v">${esc(d.branch)}</span></div>
-      <div><span class="k">전화번호</span><span class="v">${esc(d.phone)}</span></div>
-      <div><span class="k">사업자등록 예정지</span><span class="v">${esc(d.biz)}</span></div>
+      ${row("지사명", d.branch)}
+      ${row("전화번호", d.phone)}
+      ${row("사업자등록 예정지", d.biz)}
     </div>
     <p class="formnote">지사명은 먼저 신청하신 분이 선점하는 방식이라, 최종 확정 여부는 알스터가 확인 후 개별 안내드립니다.</p>
     <button class="ghost wide" type="button" id="reopen">다시 입력하기</button>
@@ -1079,16 +1086,48 @@ function fmtPhone(v){
   return n.slice(0, 3) + "-" + n.slice(3, n.length - 4) + "-" + n.slice(n.length - 4);
 }
 
+// 제출 여부는 기기가 아니라 서버가 안다. 다른 기기에서 열어도 제출 완료로 보이게 한다.
+let subChecked = false;
+
+async function loadMySub(p){
+  if (!LOG_URL || subChecked) return;
+  subChecked = true;
+  let sub = null;
+  try {
+    const r = await jsonp(LOG_URL, { type: "sub", name: p.name }, 15000);
+    sub = r && r.sub ? r.sub : null;
+  } catch (e) { return; }
+  if (!sub || current !== p) return;          // 그 사이 다른 사람을 조회했으면 무시
+
+  const local = getApplied(p) || {};
+  const merged = {
+    branch: sub.branch,
+    region: sub.region || local.region || "",
+    detail: sub.detail || local.detail || "",
+    phone: local.phone || "",                 // 연락처는 서버에서 내려오지 않는다
+    biz: local.biz || ""
+  };
+  setApplied(p, merged);
+
+  const wrap = $("#fwrap"), form = $("#bform");
+  if (!wrap || !form) return;                 // 이미 완료 화면이면 그대로 둔다
+  wrap.querySelector("h2").textContent = "제출하신 내용";
+  form.outerHTML = doneHTML(merged);
+  bindForm(p);
+}
+
 function bindForm(p){
   const wrap = $("#fwrap");
   if (!wrap) return;
 
   paintTaken();   // 이전 목록을 먼저 그려두고
   loadTaken();    // 최신 목록으로 덮어쓴다
+  if ($("#bform")) loadMySub(p);
 
   const reopen = $("#reopen");
   if (reopen){
     reopen.addEventListener("click", () => {
+      subChecked = true;   // 사용자가 직접 연 폼이므로 서버 상태로 되돌리지 않는다
       wrap.querySelector("h2").textContent = "지사 설립 정보 입력";
       const d = getApplied(p) || {};
       wrap.querySelector(".done").outerHTML = formHTML();
@@ -1373,9 +1412,10 @@ function logView(p){
 let current = null;
 function renderPerson(p){
   current = p;
+  subChecked = false;
   logView(p);
   let html = p.pass ? passHTML(p) : notYetHTML(p);
-  if (p.date && p.h) html += cardHTML(p);   // 면접 일정이 있는 경우에만
+  if (validDate(p.date) && p.h) html += cardHTML(p);   // 제대로 된 면접 일정이 있을 때만
   render(html);
 }
 
