@@ -547,6 +547,7 @@
   }
   .tools input::placeholder{color:var(--ink3)}
   .tools input:focus{outline:none;border-color:var(--ink3)}
+  .tools .sp{flex:1 1 auto}
   .chips{display:flex;gap:6px;flex-wrap:wrap}
   .chipf{
     padding:9px 13px;font-size:.86rem;border-radius:999px;
@@ -644,16 +645,22 @@
   .twobtn{display:flex;gap:8px;margin-bottom:18px}
   .twobtn .addbtn{margin-bottom:0}
 
-  /* 제출 내역 · 조회 현황 */
-  .sub{padding:15px 2px;border-bottom:1px solid var(--line2)}
-  .sub:hover{background:var(--soft)}
-  .sub .t{display:flex;gap:9px;align-items:baseline;flex-wrap:wrap}
-  .sub .t b{font-size:1rem;font-weight:700}
-  .sub .t .br{color:var(--ink);font-size:.95rem;font-weight:600}
-  .sub .t .at{color:var(--ink3);font-size:.82rem;margin-left:auto}
-  .sub .d{margin-top:7px;color:var(--ink2);font-size:.88rem;line-height:1.7}
-  .sub .d span{color:var(--ink3)}
-  .sub .acts2{margin-top:9px}
+  /* 지사 신청 (한 줄) */
+  .shead, .srow{display:flex;align-items:center;gap:10px;padding:9px 2px}
+  .shead{
+    border-bottom:1px solid var(--line);font-size:.78rem;color:var(--ink3);
+    position:sticky;top:0;background:var(--bg);
+  }
+  .srow{border-bottom:1px solid var(--line2);font-size:.9rem}
+  .srow:hover{background:var(--soft)}
+  .srow > span, .shead > span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .c-ck{flex:0 0 18px}
+  .c-nm{flex:0 0 74px;font-weight:700}
+  .c-br{flex:1 1 190px;min-width:0;font-weight:600}
+  .c-ph{flex:0 0 116px;color:var(--ink2);font-variant-numeric:tabular-nums}
+  .c-bz{flex:1 1 120px;min-width:0;color:var(--ink2)}
+  .c-at{flex:0 0 74px;text-align:right;color:var(--ink3);font-size:.8rem}
+  .shead .c-nm,.shead .c-br,.shead .c-ph,.shead .c-bz{font-weight:400}
   .amsg{padding:34px 0;text-align:center;color:var(--ink3);font-size:.92rem}
   .acount{font-size:.85rem;color:var(--ink2);margin:0 0 12px}
   .aerrbox{
@@ -684,7 +691,13 @@
     .arow .nm{flex:1 0 100%;margin-bottom:9px}
     .arow .sel,.arow .mini{flex:1}
     .aform .two{flex-direction:column;gap:0}
-    .sub .t .at{margin-left:0;flex:1 0 100%}
+    .shead{display:none}
+    .srow{flex-wrap:wrap;row-gap:4px;padding:11px 2px}
+    .c-nm{flex:0 0 auto}
+    .c-br{flex:1 1 auto}
+    .c-at{flex:0 0 auto;margin-left:auto}
+    .c-ph{flex:0 0 auto}
+    .c-bz{flex:1 1 100%}
   }
 
   /* ---------- bottom contact ---------- */
@@ -1628,6 +1641,7 @@ let editing = null;                 // null | "new" | row 번호
 let aQuery = "";
 let aFilter = "전체";
 let selected = new Set();
+let selectedSub = new Set();
 const STATUSES = ["합격", "불합격", "대기"];
 
 function adminPw(){ try { return sessionStorage.getItem("abyss-adm") || ""; } catch (e) { return ""; } }
@@ -1836,22 +1850,108 @@ function peopleHTML(){
 
 function subsHTML(){
   const list = (adminData && adminData.subs) || [];
+  if (!list.length) return `${statsHTML()}<p class="amsg">아직 제출된 신청이 없습니다.</p>`;
   return `
     ${statsHTML()}
-    <p class="acount">지사 신청 ${list.length}건</p>
-    ${list.length ? list.map(x => `
-      <div class="sub">
-        <div class="t">
-          <b>${esc(x.name)}</b>
-          <span class="br">${esc(x.branch)}</span>
-          <span class="at">${esc(x.at)}</span>
-        </div>
-        <div class="d">
-          <span>전화</span> ${esc(x.phone)} &nbsp;·&nbsp;
-          <span>사업자등록 예정지</span> ${esc(x.biz)}
-        </div>
-        <div class="acts2"><button class="mini dgr" type="button" data-delsub="${x.row}">신청 삭제</button></div>
-      </div>`).join("") : `<p class="amsg">아직 제출된 신청이 없습니다.</p>`}`;
+    <div class="tools">
+      <label class="selall"><input type="checkbox" class="ck" id="selallsub"> 전체 선택</label>
+      <span class="sp"></span>
+      <button class="mini" type="button" id="copyall">전체 복사</button>
+    </div>
+    <div id="selbarsub"></div>
+    <div class="shead">
+      <span class="c-ck"></span><span class="c-nm">이름</span><span class="c-br">신청 지사</span>
+      <span class="c-ph">전화번호</span><span class="c-bz">사업자등록 예정지</span><span class="c-at">제출</span>
+    </div>
+    <div id="sublist">${subRowsHTML()}</div>`;
+}
+
+function subRowsHTML(){
+  return ((adminData && adminData.subs) || []).map(x => `
+    <div class="srow">
+      <input type="checkbox" class="ck c-ck" data-picksub="${x.row}"${selectedSub.has(x.row) ? " checked" : ""} aria-label="${esc(x.name)} 선택">
+      <span class="c-nm" title="${esc(x.name)}">${esc(x.name)}</span>
+      <span class="c-br" title="${esc(x.branch)}">${esc(x.branch)}</span>
+      <span class="c-ph">${esc(x.phone)}</span>
+      <span class="c-bz" title="${esc(x.biz)}">${esc(x.biz)}</span>
+      <span class="c-at">${esc(x.at)}</span>
+    </div>`).join("");
+}
+
+// 시트에 바로 붙여넣을 수 있게 탭으로 구분해 복사한다
+function subsTSV(rows){
+  const head = ["이름", "활동명", "전화번호", "지사명", "지역", "세부지역", "사업자등록예정지", "제출시각"];
+  const body = rows.map(x => [x.name, x.alias, x.phone, x.branch, x.region, x.detail, x.biz, x.at].join("\t"));
+  return [head.join("\t")].concat(body).join("\n");
+}
+
+async function copySubs(rows){
+  const text = subsTSV(rows);
+  try { await navigator.clipboard.writeText(text); }
+  catch (e) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.cssText = "position:fixed;left:-9999px";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); } catch (e2) {}
+    ta.remove();
+  }
+  const t = $("#toast");
+  t.textContent = `${rows.length}건을 복사했습니다`;
+  t.classList.add("on");
+  setTimeout(() => { t.classList.remove("on"); t.textContent = "주소를 복사했습니다"; }, 1800);
+}
+
+function renderSubBar(){
+  const bar = $("#selbarsub");
+  if (!bar) return;
+  if (!selectedSub.size){ bar.innerHTML = ""; return; }
+  bar.innerHTML = `
+    <div class="selbar">
+      <span><b>${selectedSub.size}건</b> 선택됨</span>
+      <span class="sp"></span>
+      <button type="button" id="copysel">복사</button>
+      <button type="button" class="g2" id="delsel">삭제</button>
+      <button type="button" class="g2" id="subclear">선택 해제</button>
+    </div>`;
+  const subs = (adminData && adminData.subs) || [];
+  $("#copysel").addEventListener("click", () => copySubs(subs.filter(x => selectedSub.has(x.row))));
+  $("#subclear").addEventListener("click", () => { selectedSub.clear(); repaintSubs(); });
+  $("#delsel").addEventListener("click", async () => {
+    const rows = [...selectedSub];
+    if (!window.confirm(`선택한 ${rows.length}건을 삭제할까요?\n삭제하면 해당 지사명을 다시 사용할 수 있게 됩니다.`)) return;
+    bar.innerHTML = `<div class="selbar"><span>삭제 중…</span></div>`;
+    try {
+      const r = await adminCall("delsubs", { rows: rows.join(",") });
+      if (r && r.ok){ selectedSub.clear(); await refreshAdmin(); } else renderSubBar();
+    } catch (e) { renderSubBar(); }
+  });
+}
+
+function repaintSubs(){
+  const el = $("#sublist");
+  if (el){ el.innerHTML = subRowsHTML(); bindSubRows(); }
+  renderSubBar();
+  const all = $("#selallsub");
+  if (all){
+    const subs = (adminData && adminData.subs) || [];
+    all.checked = subs.length > 0 && subs.every(x => selectedSub.has(x.row));
+    all.indeterminate = !all.checked && subs.some(x => selectedSub.has(x.row));
+  }
+}
+
+function bindSubRows(){
+  $$("[data-picksub]").forEach(ck => ck.addEventListener("change", () => {
+    const n = Number(ck.dataset.picksub);
+    ck.checked ? selectedSub.add(n) : selectedSub.delete(n);
+    renderSubBar();
+    const all = $("#selallsub");
+    if (all){
+      const subs = (adminData && adminData.subs) || [];
+      all.checked = subs.every(x => selectedSub.has(x.row));
+      all.indeterminate = !all.checked && subs.some(x => selectedSub.has(x.row));
+    }
+  }));
 }
 
 function viewsHTML(){
@@ -2005,7 +2105,7 @@ function bindAdmin(){
   }
 
   $$(".atabs button").forEach(b => b.addEventListener("click", () => {
-    adminTab = b.dataset.tab; editing = null; selected.clear();
+    adminTab = b.dataset.tab; editing = null; selected.clear(); selectedSub.clear();
     adminBody(panelHTML()); bindAdmin();
   }));
 
@@ -2101,15 +2201,18 @@ function bindAdmin(){
     }
   });
 
-  $$("[data-delsub]").forEach(b => b.addEventListener("click", async () => {
-    if (!window.confirm("이 지사 신청을 삭제할까요?\n삭제하면 해당 지사명을 다시 사용할 수 있게 됩니다.")) return;
-    b.disabled = true;
-    try {
-      const r = await adminCall("delsub", { row: b.dataset.delsub });
-      if (r && r.ok) await refreshAdmin(); else b.disabled = false;
-    } catch (e) { b.disabled = false; }
-  }));
+  const allSub = $("#selallsub");
+  if (allSub) allSub.addEventListener("change", () => {
+    const subs = (adminData && adminData.subs) || [];
+    subs.forEach(x => allSub.checked ? selectedSub.add(x.row) : selectedSub.delete(x.row));
+    repaintSubs();
+  });
 
+  const copyAll = $("#copyall");
+  if (copyAll) copyAll.addEventListener("click", () => copySubs((adminData && adminData.subs) || []));
+
+  bindSubRows();
+  renderSubBar();
   bindRows();
 }
 
