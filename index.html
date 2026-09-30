@@ -719,9 +719,11 @@ async function loadTaken(){
   if (!LOG_URL) return;
   try {
     const r = await jsonp(LOG_URL, { type: "list" }, 12000);
-    takenList = (r && Array.isArray(r.branches)) ? r.branches : [];
+    // branches가 없으면 "중복 없음"이 아니라 "아직 모름"으로 둔다.
+    // (구버전 스크립트가 배포돼 있으면 여기로 온다)
+    if (r && Array.isArray(r.branches)) takenList = r.branches;
   } catch (e) {
-    takenList = null;   // 못 불러와도 폼은 쓸 수 있게 두고, 제출 때 서버가 막는다
+    // 못 불러와도 이미 받아둔 목록은 유지한다. 최종 판정은 어차피 서버가 한다.
   }
   paintTaken();
   syncPreview();
@@ -901,7 +903,8 @@ function bindForm(p){
   const wrap = $("#fwrap");
   if (!wrap) return;
 
-  if (takenList === null) loadTaken(); else paintTaken();
+  paintTaken();   // 이전 목록을 먼저 그려두고
+  loadTaken();    // 최신 목록으로 덮어쓴다
 
   const reopen = $("#reopen");
   if (reopen){
