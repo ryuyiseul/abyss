@@ -357,6 +357,7 @@
   .form input[aria-invalid="true"]{border-color:#B4726F}
   .two{display:flex;gap:9px}
   .two > div{flex:1;min-width:0}
+  .bk .form{margin-top:0}
   .preview{
     margin-top:11px;padding:15px 16px;background:var(--black);
     border:1px solid var(--hair);border-radius:2px;text-align:center;
@@ -420,6 +421,82 @@
   }
   .recap .k{flex:0 0 96px;color:var(--silver-3);font-size:.86rem}
   .recap .v{flex:1;min-width:0;word-break:break-all}
+
+  /* ---------- 면접 일정 신청 ---------- */
+  #result:not(:empty) ~ #booking{display:none}
+  .bk{margin-top:32px}
+  .bk .lead{
+    padding:24px 24px 26px;background:var(--panel-2);
+    border:1px solid var(--hair-soft);border-bottom:none;border-radius:3px 3px 0 0;
+  }
+  .bk .lead h2{font-size:1.15rem;font-weight:600;margin:0 0 9px;letter-spacing:-0.02em}
+  .bk .lead p{margin:0;color:var(--silver-2);font-size:.92rem;line-height:1.72}
+  .bk .body{
+    padding:24px;background:var(--panel);
+    border:1px solid var(--hair-soft);border-radius:0 0 3px 3px;
+  }
+  .step{
+    display:flex;align-items:center;gap:9px;margin:0 0 14px;
+    font-size:.95rem;font-weight:600;letter-spacing:-0.02em;
+  }
+  .step i{
+    flex:0 0 auto;width:21px;height:21px;border-radius:50%;background:var(--white);color:var(--black);
+    font-style:normal;font-size:.76rem;font-weight:700;display:flex;align-items:center;justify-content:center;
+  }
+  .step + .desc{margin:-7px 0 13px;color:var(--silver-3);font-size:.85rem;line-height:1.6}
+  .sp2{height:30px}
+
+  .day{margin-bottom:16px}
+  .day:last-child{margin-bottom:0}
+  .day h4{
+    margin:0 0 9px;font-size:.88rem;font-weight:600;color:var(--silver);
+    letter-spacing:-0.01em;
+  }
+  .day h4 span{color:var(--silver-3);font-weight:400;margin-left:6px;font-size:.84rem}
+  .slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:7px}
+  .slot{
+    padding:11px 8px;background:var(--panel-2);border:1px solid var(--hair);border-radius:3px;
+    color:var(--white);font-size:.88rem;text-align:center;line-height:1.35;
+    transition:border-color .15s ease,background .15s ease;
+  }
+  .slot b{display:block;font-weight:500}
+  .slot em{display:block;font-style:normal;font-size:.76rem;color:var(--silver-3);margin-top:3px}
+  .slot:hover:not(:disabled){border-color:var(--silver-2)}
+  .slot.on{background:var(--white);border-color:var(--white);color:var(--black);font-weight:600}
+  .slot.on em{color:rgba(0,0,0,.55)}
+  .slot:disabled{opacity:.42;cursor:default;text-decoration:line-through;text-decoration-color:var(--silver-3)}
+  .slot:focus-visible{outline:2px solid var(--silver);outline-offset:2px}
+
+  .picked{
+    margin-top:14px;padding:14px 16px;background:var(--panel-2);
+    border:1px solid var(--hair);border-radius:3px;font-size:.9rem;
+  }
+  .picked .k2{color:var(--silver-3);font-size:.82rem;display:block;margin-bottom:7px}
+  .picked ol{margin:0;padding-left:18px;color:var(--white)}
+  .picked li{padding:2px 0}
+  .picked .none{color:var(--silver-3)}
+
+  .bknote{
+    margin-top:16px;padding:15px 16px;border-left:2px solid var(--silver-2);
+    background:var(--panel-2);color:var(--silver-2);font-size:.89rem;line-height:1.72;
+  }
+  .bknote b{color:var(--white);font-weight:600}
+
+  .bkdone{text-align:center;padding:8px 0 0}
+  .bkdone .ok2{
+    display:inline-block;font-size:.8rem;font-weight:700;color:var(--black);
+    background:var(--white);padding:4px 12px;border-radius:999px;margin-bottom:16px;
+  }
+  .bkdone h3{margin:0 0 10px;font-size:1.3rem;font-weight:300;letter-spacing:-0.03em}
+  .bkdone > p{margin:0 0 20px;color:var(--silver-2);font-size:.92rem;line-height:1.72}
+  .fixbox{
+    margin:0 0 18px;padding:20px;background:var(--panel-2);
+    border:1px solid var(--hair);border-radius:3px;
+  }
+  .fixbox .k2{display:block;font-size:.8rem;color:var(--silver-3);letter-spacing:.16em;margin-bottom:9px}
+  .fixbox .big{font-size:1.35rem;font-weight:300;letter-spacing:-0.03em;line-height:1.3}
+  .fixbox ol{margin:0;padding-left:19px;text-align:left;color:var(--white);font-size:.98rem}
+  .fixbox li{padding:3px 0}
 
   /* ---------- faq ---------- */
   .faq{margin-top:16px;border-top:1px solid var(--hair-soft)}
@@ -506,6 +583,7 @@
     --bg:#FFFFFF; --soft:#F5F6F7; --line:#E2E4E7; --line2:#EEEFF1;
     --ink:#16181B; --ink2:#5F636A; --ink3:#9297A0;
     --ok:#136A3A; --okbg:#E7F5EC; --no:#9A2F2A; --nobg:#FBECEB; --wait:#7A5A12; --waitbg:#FBF3DF;
+    --up:#1B4E86; --upbg:#E9F1FA;
     width:min(940px,calc(100vw - 24px));max-height:min(92vh,940px);
     background:var(--bg);color:var(--ink);border:none;border-radius:6px;
   }
@@ -577,6 +655,7 @@
   .sel.s합격{background-color:var(--okbg);color:var(--ok);border-color:#BFE3CD}
   .sel.s불합격{background-color:var(--nobg);color:var(--no);border-color:#EFC9C6}
   .sel.s대기{background-color:var(--waitbg);color:var(--wait);border-color:#EBDCAE}
+  .sel.s면접예정{background-color:var(--upbg);color:var(--up);border-color:#C3D7EE}
   .mini{
     flex:0 0 auto;padding:7px 11px;font-size:.84rem;background:var(--bg);
     border:1px solid var(--line);color:var(--ink2);border-radius:4px;white-space:nowrap;
@@ -645,6 +724,47 @@
   .twobtn{display:flex;gap:8px;margin-bottom:18px}
   .twobtn .addbtn{margin-bottom:0}
 
+  /* 면접 신청 (예약) */
+  .bgrid{border:1px solid var(--line2);border-radius:5px;overflow:hidden}
+  .brow{display:flex;border-bottom:1px solid var(--line2)}
+  .brow:last-child{border-bottom:none}
+  .brow.bhead{background:var(--soft);font-size:.78rem;color:var(--ink3)}
+  .brow .bd{
+    flex:0 0 92px;padding:9px 10px;font-size:.84rem;font-weight:600;
+    border-right:1px solid var(--line2);display:flex;align-items:center;gap:6px;
+  }
+  .brow .bd em{font-style:normal;font-weight:400;color:var(--ink3);font-size:.78rem}
+  .brow .bc{
+    flex:1 1 0;min-width:0;padding:9px 4px;text-align:center;font-size:.84rem;
+    font-variant-numeric:tabular-nums;border-right:1px solid var(--line2);
+  }
+  .brow .bc:last-child{border-right:none}
+  .brow .bc.p{background:var(--waitbg);color:var(--wait);font-weight:600}
+  .brow .bc.f{background:var(--nobg);color:var(--no);font-weight:700}
+
+  .brw{padding:13px 2px;border-bottom:1px solid var(--line2)}
+  .brw:hover{background:var(--soft)}
+  .brw .bi{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font-size:.93rem}
+  .brw .bi b{font-weight:700}
+  .brw .bi span{color:var(--ink3);font-size:.85rem}
+  .brw .bi .cg{
+    color:var(--ink2);background:var(--soft);border:1px solid var(--line2);
+    border-radius:999px;padding:1px 8px;font-size:.78rem;
+  }
+  .brw .bi .at2{margin-left:auto;font-size:.8rem}
+  .brw .bi .meta{flex:1 0 100%;color:var(--ink2);font-size:.85rem;font-variant-numeric:tabular-nums}
+  .bpick{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+  .pk{
+    flex:1 1 180px;padding:10px 12px;text-align:left;border-radius:4px;
+    background:var(--bg);border:1px solid var(--line);color:var(--ink);font-size:.89rem;
+  }
+  .pk em{
+    display:block;font-style:normal;font-size:.76rem;color:var(--ink3);margin-bottom:2px;
+  }
+  .pk:hover{border-color:var(--ink3)}
+  .pk.on{background:var(--ink);border-color:var(--ink);color:#fff;font-weight:600}
+  .pk.on em{color:rgba(255,255,255,.65)}
+
   /* 지사 신청 (한 줄) */
   .shead, .srow{display:flex;align-items:center;gap:10px;padding:9px 2px}
   .shead{
@@ -692,6 +812,9 @@
     .arow .sel,.arow .mini{flex:1}
     .aform .two{flex-direction:column;gap:0}
     .shead{display:none}
+    .bgrid{overflow-x:auto}
+    .brow{min-width:460px}
+    .pk{flex:1 1 100%}
     .srow{flex-wrap:wrap;row-gap:4px;padding:11px 2px}
     .c-nm{flex:0 0 auto}
     .c-br{flex:1 1 auto}
@@ -762,6 +885,7 @@
   </header>
 
   <main id="result" aria-live="polite"></main>
+  <section id="booking"></section>
 </div>
 
 <section class="contact">
@@ -1488,6 +1612,16 @@ function pickHTML(list){
 
 let candidates = [];
 function render(html){ $("#result").innerHTML = html; bind(); }
+// 상단 문구는 관리자 페이지에서 기수마다 바꿀 수 있다
+function applyConfig(c){
+  if (!c) return;
+  const set = (sel, v) => { const el = $(sel); if (el && v) el.textContent = v; };
+  set(".kicker", c.kicker);
+  set("h1", c.title);
+  set(".lede", c.lede);
+  if (c.title) document.title = "ABYSS " + c.title;
+}
+
 async function loadRoster(){
   const go = $("#go"), hint = $(".hint");
   const base = hint ? hint.textContent : "";
@@ -1497,6 +1631,7 @@ async function loadRoster(){
     // 명단 탭이 비어 있으면 빈 배열이 온다. 그걸로 덮어쓰면 아무도 조회되지 않으므로
     // 내용이 있을 때만 교체한다.
     if (r.people.length) DATA = r.people;
+    applyConfig(r.config);
     rosterState = "ready";
     if (go){ go.disabled = false; go.textContent = "조회"; }
     if (hint) hint.textContent = base;
@@ -1505,6 +1640,21 @@ async function loadRoster(){
     rosterState = "error";
     if (go){ go.disabled = false; go.textContent = "조회"; }
   }
+}
+
+function noScheduleHTML(p){
+  return `
+  <div class="card pass rej reveal">
+    <div class="card-top">
+      <div class="who"><strong>${esc(p.name)}</strong>${p.alias ? ` <span class="alias">${esc(p.alias)}</span>` : ""}</div>
+      <div class="headline">면접 일정을 조율하고<br>있습니다</div>
+      <p class="congrat">아직 면접 일시가 확정되지 않았습니다. 확정되면 이 화면에서 바로 확인하실 수 있으니 잠시만 기다려 주세요.</p>
+    </div>
+    <div class="sec">
+      <p class="sec-lede">궁금한 점이 있으시면 아래로 연락해 주세요.</p>
+      <a class="ghost wide" href="${KAKAO}" target="_blank" rel="noopener">카카오톡으로 문의하기</a>
+    </div>
+  </div>`;
 }
 
 function rejectedHTML(p){
@@ -1568,12 +1718,18 @@ function renderPerson(p){
   subChecked = false;
   logView(p);
   const st = p.status || (p.pass ? "합격" : "대기");
-  let html = st === "합격" ? passHTML(p)
-           : st === "불합격" ? rejectedHTML(p)
-           : notYetHTML(p);
-  // 결과가 나온 뒤에는 지난 면접 일정을 다시 띄우지 않는다
-  if (st === "대기" && validDate(p.date) && p.h) html += cardHTML(p);
-  else if (st === "합격" && validDate(p.date) && p.h) html += cardHTML(p);
+  const hasSchedule = validDate(p.date) && p.h;
+  let html;
+  if (st === "면접예정"){
+    // 면접 전이므로 일정 카드만 보여준다 (장소·도착 안내·FAQ 포함)
+    html = hasSchedule ? cardHTML(p) : noScheduleHTML(p);
+  } else if (st === "합격"){
+    html = passHTML(p) + (hasSchedule ? cardHTML(p) : "");
+  } else if (st === "불합격"){
+    html = rejectedHTML(p);           // 결과가 나온 뒤엔 지난 일정을 다시 띄우지 않는다
+  } else {
+    html = notYetHTML(p) + (hasSchedule ? cardHTML(p) : "");
+  }
   render(html);
 }
 
@@ -1629,20 +1785,260 @@ function search(){
   if (!hits.length) hits = rows.filter(r => r.keys.some(k => k.includes(q)));
   hits = hits.map(r => r.p);
 
-  if (hits.length === 1) renderPerson(hits[0]);
-  else if (hits.length > 1){ candidates = hits; render(pickHTML(hits)); }
-  else render(missHTML(raw));
+  if (hits.length === 1){ renderPerson(hits[0]); return; }
+  if (hits.length > 1){ candidates = hits; render(pickHTML(hits)); return; }
+
+  // 명단에 없으면 신청 내역을 찾아본다
+  render(`<p class="amsg" style="color:var(--silver-3);padding:32px 0;text-align:center">찾는 중…</p>`);
+  lookupBooking(raw).then(b => {
+    render(b ? bookDoneHTML(b, false) : missHTML(raw));
+  });
+}
+
+// ============ 면접 일정 신청 ============
+let slotData = null;
+let picked = [];
+
+function hourLabel(h){
+  if (!h) return "";
+  if (h < 12) return `오전 ${h}시`;
+  if (h === 12) return "낮 12시";
+  return `오후 ${h - 12}시`;
+}
+function fmtDay(iso){
+  const d = validDate(iso);
+  return d ? `${d.getMonth() + 1}월 ${d.getDate()}일` : String(iso || "");
+}
+function dayOf(iso){
+  const d = validDate(iso);
+  return d ? DOW[d.getDay()] + "요일" : "";
+}
+function fmtSlot(key){
+  const parts = String(key || "").split("|");
+  if (parts.length !== 2) return "";
+  return `${fmtDay(parts[0])} ${dayOf(parts[0])} ${hourLabel(Number(parts[1]))}`;
+}
+
+async function loadSlots(){
+  if (!LOG_URL) return;
+  try {
+    const r = await jsonp(LOG_URL, { type: "slots" }, 15000);
+    if (!r || !r.ok || !Array.isArray(r.board)) return;
+    slotData = r;
+    applyConfig(r.config);
+    paintBooking();
+  } catch (e) { /* 못 불러오면 신청 영역을 띄우지 않는다 */ }
+}
+
+function leftOf(key){
+  if (!slotData) return 0;
+  const b = slotData.board.filter(x => (x.date + "|" + x.h) === key)[0];
+  return b ? Math.max(0, slotData.cap - b.taken) : 0;
+}
+
+function slotGridHTML(){
+  return slotData.dates.map(d => `
+    <div class="day">
+      <h4>${fmtDay(d)} <span>${dayOf(d)}</span></h4>
+      <div class="slots">
+        ${slotData.hours.map(h => {
+          const k = d + "|" + h;
+          const left = leftOf(k);
+          const on = picked.indexOf(k) >= 0;
+          return `<button type="button" class="slot${on ? " on" : ""}" data-k="${k}"${left ? "" : " disabled"}>
+            <b>${hourLabel(h)}</b><em>${left ? `${left}자리 남음` : "마감"}</em>
+          </button>`;
+        }).join("")}
+      </div>
+    </div>`).join("");
+}
+
+function pickedHTML(){
+  if (!picked.length){
+    return `<span class="k2">선택한 일정</span><p class="none">위에서 ${slotData.pick}개를 선택해 주세요.</p>`;
+  }
+  return `<span class="k2">선택한 일정 ${picked.length}/${slotData.pick}</span>
+    <ol>${picked.map(k => `<li>${esc(fmtSlot(k))}</li>`).join("")}</ol>`;
+}
+
+function bookingHTML(){
+  const c = slotData.config || {};
+  return `
+  <div class="bk reveal">
+    <div class="lead">
+      <h2>면접 일정 신청</h2>
+      <p>아래 정보를 입력하시고 가능한 일정 <b>${slotData.pick}개</b>를 선택해 주세요. 먼저 신청하신 분부터 자리가 채워지며, 한 타임에 ${slotData.cap}명까지 받습니다.</p>
+    </div>
+    <div class="body">
+      <form class="form" id="bkform" novalidate>
+        <p class="step"><i>1</i>기본 정보</p>
+        <div class="two">
+          <div class="fld" style="flex:1">
+            <label for="k-name">성함 <span class="req">필수</span></label>
+            <input id="k-name" type="text" placeholder="홍길동" maxlength="20" autocomplete="name">
+          </div>
+          <div class="fld" style="flex:1">
+            <label for="k-alias">활동명</label>
+            <input id="k-alias" type="text" placeholder="닉네임" maxlength="30" autocomplete="off">
+          </div>
+        </div>
+        <div class="two">
+          <div class="fld" style="flex:1">
+            <label for="k-phone">전화번호 <span class="req">필수</span></label>
+            <input id="k-phone" type="tel" inputmode="numeric" placeholder="010-0000-0000" maxlength="13" autocomplete="tel">
+          </div>
+          <div class="fld" style="flex:1">
+            <label for="k-cohort">기수</label>
+            <input id="k-cohort" type="text" placeholder="3기" maxlength="20" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="sp2"></div>
+        <p class="step"><i>2</i>가능한 일정 ${slotData.pick}개 선택</p>
+        <p class="desc">마감된 타임은 선택하실 수 없습니다.</p>
+        <div id="grid">${slotGridHTML()}</div>
+        <div class="picked" id="pickbox">${pickedHTML()}</div>
+
+        <div class="bknote">${esc(c.notice || "")}</div>
+        <p class="err" id="k-err" hidden></p>
+        <button class="submit" type="submit" id="k-go">신청하기</button>
+        <p class="formnote">확정 전까지는 다시 신청해 변경하실 수 있습니다.</p>
+      </form>
+    </div>
+  </div>`;
+}
+
+function bookDoneHTML(b, justSent){
+  const c = (slotData && slotData.config) || {};
+  const who = `<div class="who"><strong>${esc(b.name)}</strong>${b.alias ? ` <span class="alias">${esc(b.alias)}</span>` : ""}</div>`;
+  if (b.fixed){
+    const sp = String(b.fixed).split("|");
+    const head = `
+    <div class="card pass reveal">
+      <div class="card-top">
+        ${who}
+        <div class="headline">면접 일정이<br>확정되었습니다</div>
+      </div>
+    </div>`;
+    // 장소·도착 안내·FAQ 는 일정 카드가 그대로 보여준다
+    return head + cardHTML({ name: b.name, alias: b.alias,
+      date: sp[0], time: hourLabel(Number(sp[1])), h: Number(sp[1]) });
+  }
+  return `
+  <div class="card pass reveal">
+    <div class="card-top">
+      ${who}
+      <div class="headline">${justSent ? "신청이<br>접수되었습니다" : "확정을 기다리고<br>있습니다"}</div>
+    </div>
+    <div class="sec">
+      <div class="fixbox">
+        <span class="k2">신청하신 일정</span>
+        <ol>${[b.p1, b.p2].filter(Boolean).map(k => `<li>${esc(fmtSlot(k))}</li>`).join("")}</ol>
+      </div>
+      <div class="bknote">${esc(c.notice || "")}</div>
+      <p class="sec-lede" style="margin-top:16px">일정을 바꾸고 싶으시면 확정 전까지 다시 신청해 주세요.</p>
+      <a class="ghost wide" href="${KAKAO}" target="_blank" rel="noopener">카카오톡으로 문의하기</a>
+    </div>
+  </div>`;
+}
+
+function paintBooking(){
+  const el = $("#booking");
+  if (!el || !slotData) return;
+  el.innerHTML = bookingHTML();
+  bindBooking();
+}
+
+function repaintGrid(){
+  const g = $("#grid");
+  if (g){ g.innerHTML = slotGridHTML(); bindSlots(); }
+  const pb = $("#pickbox");
+  if (pb) pb.innerHTML = pickedHTML();
+}
+
+function bindSlots(){
+  $$(".slot").forEach(b => b.addEventListener("click", () => {
+    const k = b.dataset.k;
+    const i = picked.indexOf(k);
+    if (i >= 0) picked.splice(i, 1);
+    else if (picked.length >= slotData.pick){
+      picked.shift();              // 먼저 고른 것을 밀어낸다
+      picked.push(k);
+    } else picked.push(k);
+    repaintGrid();
+  }));
+}
+
+function bindBooking(){
+  bindSlots();
+  const form = $("#bkform");
+  if (!form) return;
+  const phone = $("#k-phone");
+  phone.addEventListener("input", () => { phone.value = fmtPhone(phone.value); });
+
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+    const err = $("#k-err"), go = $("#k-go");
+    const show = m => { err.textContent = m; err.hidden = false; };
+    err.hidden = true;
+
+    const name = $("#k-name").value.trim();
+    const ph = phone.value.trim();
+    if (!name){ show("성함을 입력해 주세요."); $("#k-name").focus(); return; }
+    if (!/^01[016789]-\d{3,4}-\d{4}$/.test(ph)){
+      show("휴대폰 번호를 정확히 입력해 주세요. (예: 010-1234-5678)"); phone.focus(); return;
+    }
+    if (picked.length !== slotData.pick){
+      show(`가능한 일정 ${slotData.pick}개를 선택해 주세요.`);
+      $("#grid").scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+
+    go.disabled = true;
+    const label = go.textContent;
+    go.textContent = "신청 중…";
+    try {
+      const r = await jsonp(LOG_URL, {
+        type: "book", name: name, alias: $("#k-alias").value.trim(),
+        phone: ph, cohort: $("#k-cohort").value.trim(), picks: picked.join(",")
+      }, 20000);
+      if (r && r.board) slotData.board = r.board;
+      if (!r || r.ok !== true){
+        go.disabled = false; go.textContent = label;
+        show((r && r.error) || "신청하지 못했습니다. 잠시 후 다시 시도해 주세요.");
+        if (r && r.full) picked = picked.filter(k => r.full.indexOf(k) < 0);
+        repaintGrid();
+        return;
+      }
+      const b = { name: name, alias: $("#k-alias").value.trim(),
+                  p1: picked[0], p2: picked[1], fixed: "" };
+      $("#booking").innerHTML = "";
+      render(bookDoneHTML(b, true));
+      $("#result").scrollIntoView({ behavior: "smooth", block: "start" });
+    } catch (e3) {
+      go.disabled = false; go.textContent = label;
+      show("신청하지 못했습니다. 잠시 후 다시 시도해 주세요.");
+    }
+  });
+}
+
+async function lookupBooking(q){
+  if (!LOG_URL) return null;
+  try {
+    const r = await jsonp(LOG_URL, { type: "mybook", name: q }, 15000);
+    return r && r.book ? r.book : null;
+  } catch (e) { return null; }
 }
 
 // ============ 관리자 ============
 let adminData = null;
-let adminTab = "people";
+let adminTab = "books";
 let editing = null;                 // null | "new" | row 번호
 let aQuery = "";
 let aFilter = "전체";
 let selected = new Set();
 let selectedSub = new Set();
-const STATUSES = ["합격", "불합격", "대기"];
+const STATUSES = ["면접예정", "대기", "합격", "불합격"];
 
 function adminPw(){ try { return sessionStorage.getItem("abyss-adm") || ""; } catch (e) { return ""; } }
 function setAdminPw(v){ try { v ? sessionStorage.setItem("abyss-adm", v) : sessionStorage.removeItem("abyss-adm"); } catch (e) {} }
@@ -1678,16 +2074,20 @@ function loginHTML(msg){
 function panelHTML(){
   return `
   <div class="atabs">
+    <button type="button" data-tab="books" class="${adminTab === "books" ? "on" : ""}">면접 신청</button>
     <button type="button" data-tab="people" class="${adminTab === "people" ? "on" : ""}">명단</button>
     <button type="button" data-tab="subs" class="${adminTab === "subs" ? "on" : ""}">지사 신청</button>
     <button type="button" data-tab="views" class="${adminTab === "views" ? "on" : ""}">조회 현황</button>
+    <button type="button" data-tab="conf" class="${adminTab === "conf" ? "on" : ""}">설정</button>
   </div>
   <div class="apad" id="apanel">${tabHTML()}</div>`;
 }
 
 function tabHTML(){
+  if (adminTab === "books") return booksHTML();
   if (adminTab === "subs") return subsHTML();
   if (adminTab === "views") return viewsHTML();
+  if (adminTab === "conf") return settingsHTML();
   return peopleHTML();
 }
 
@@ -1697,8 +2097,8 @@ function statsHTML(){
   const n = st => ppl.filter(x => x.status === st).length;
   const cell = (v, l) => `<div class="stat"><b>${v}</b><span>${l}</span></div>`;
   return `<div class="stats">
-    ${cell(ppl.length, "전체")}${cell(n("합격"), "합격")}${cell(n("불합격"), "불합격")}
-    ${cell(n("대기"), "대기")}${cell(subs.length, "지사 신청")}
+    ${cell(ppl.length, "전체")}${cell(n("면접예정"), "면접예정")}${cell(n("대기"), "대기")}
+    ${cell(n("합격"), "합격")}${cell(n("불합격"), "불합격")}${cell(((adminData && adminData.books) || []).length, "면접 신청")}
   </div>`;
 }
 
@@ -1757,7 +2157,7 @@ function bulkFormHTML(){
     <div class="fld">
       <label for="b-status">추가할 때 상태</label>
       <select id="b-status">
-        ${STATUSES.map(t => `<option value="${t}"${t === "대기" ? " selected" : ""}>${t}</option>`).join("")}
+        ${STATUSES.map(t => `<option value="${t}"${t === "면접예정" ? " selected" : ""}>${t}</option>`).join("")}
       </select>
     </div>
     <div id="b-prev"></div>
@@ -1791,7 +2191,7 @@ function bulkPreviewHTML(list){
 }
 
 function personFormHTML(x){
-  const v = x || { name: "", alias: "", status: "대기", date: "", time: "" };
+  const v = x || { name: "", alias: "", status: "면접예정", date: "", time: "" };
   return `
   <div class="aform">
     <h3>${x ? "정보 수정" : "면접자 추가"}</h3>
@@ -1821,7 +2221,7 @@ function personFormHTML(x){
       <select id="e-status">
         ${STATUSES.map(t => `<option value="${t}"${v.status === t ? " selected" : ""}>${t}</option>`).join("")}
       </select>
-      <p class="hintx">합격이면 지사 설립 폼이 보이고, 대기는 준비 중 안내, 불합격은 결과 안내가 나갑니다.</p>
+      <p class="hintx">면접예정은 일정 안내, 대기는 결과 준비 중, 합격은 지사 설립 폼, 불합격은 결과 안내가 나갑니다.</p>
     </div>
     <p class="aerrbox" id="e-err" hidden></p>
     <div class="abtns">
@@ -1970,6 +2370,170 @@ function viewsHTML(){
           <span class="meta">마지막 조회 ${esc(v.last) || "-"}</span></span>
         <span class="mini">${v.count}회</span>
       </div>`).join("") : `<p class="amsg">아직 조회 기록이 없습니다.</p>`}`;
+}
+
+// ---- 예약 (면접 일정 신청) ----
+function boardLeft(k){
+  const b = (adminData.board || []).filter(x => (x.date + "|" + x.h) === k)[0];
+  return b ? Math.max(0, (adminData.cap || 2) - b.taken) : 0;
+}
+
+function boardHTML(){
+  const dates = adminData.dates || [], hours = adminData.hours || [];
+  if (!dates.length) return "";
+  return `
+    <p class="acount">타임별 신청 현황 — 칸당 ${adminData.cap || 2}명</p>
+    <div class="bgrid">
+      <div class="brow bhead"><span class="bd"></span>${hours.map(h => `<span class="bc">${esc(hourLabel(h))}</span>`).join("")}</div>
+      ${dates.map(d => `
+        <div class="brow">
+          <span class="bd">${esc(fmtDay(d))}<em>${esc(dayOf(d))}</em></span>
+          ${hours.map(h => {
+            const k = d + "|" + h;
+            const left = boardLeft(k);
+            const cap = adminData.cap || 2;
+            const cls = left === 0 ? "f" : (left < cap ? "p" : "");
+            return `<span class="bc ${cls}">${cap - left}/${cap}</span>`;
+          }).join("")}
+        </div>`).join("")}
+    </div>`;
+}
+
+function booksHTML(){
+  const list = (adminData && adminData.books) || [];
+  const fixedN = list.filter(x => x.fixed).length;
+  return `
+    ${statsHTML()}
+    ${boardHTML()}
+    <p class="acount" style="margin-top:20px">신청 ${list.length}명 · 확정 ${fixedN}명 · 미확정 ${list.length - fixedN}명</p>
+    ${list.length ? list.map(b => `
+      <div class="brw">
+        <div class="bi">
+          <b>${esc(b.name)}</b>${b.alias ? `<span>${esc(b.alias)}</span>` : ""}
+          ${b.cohort ? `<span class="cg">${esc(b.cohort)}</span>` : ""}
+          <span class="at2">${esc(b.at)}</span>
+          <span class="meta">${esc(b.phone)}</span>
+        </div>
+        <div class="bpick">
+          ${[b.p1, b.p2].filter(Boolean).map((k, i) => `
+            <button type="button" class="pk${b.fixed === k ? " on" : ""}" data-fix="${b.row}" data-slot="${k}">
+              <em>${i + 1}지망</em>${esc(fmtSlot(k))}
+            </button>`).join("")}
+          ${b.fixed ? `<button type="button" class="mini" data-fix="${b.row}" data-slot="">확정 해제</button>` : ""}
+        </div>
+      </div>`).join("") : `<p class="amsg">아직 신청이 없습니다.</p>`}`;
+}
+
+function bindBooks(){
+  $$("[data-fix]").forEach(b => b.addEventListener("click", async () => {
+    const slot = b.dataset.slot;
+    const who = ((adminData.books || []).filter(x => String(x.row) === String(b.dataset.fix))[0] || {}).name || "";
+    if (slot && !window.confirm(`${who} 님의 면접을\n${fmtSlot(slot)}\n으로 확정할까요?`)) return;
+    if (!slot && !window.confirm(`${who} 님의 확정을 해제할까요?`)) return;
+    b.disabled = true;
+    try {
+      const r = await adminCall("confirm", { row: b.dataset.fix, slot: slot });
+      if (r && r.ok){
+        adminData.books = r.books;
+        adminData.board = r.board;
+        adminData.people = r.people;
+        repaintPanel();
+        loadRoster();   // 조회 화면도 최신 명단으로
+      } else {
+        b.disabled = false;
+        if (r && r.error) window.alert(r.error);
+      }
+    } catch (e) { b.disabled = false; }
+  }));
+}
+
+// ---- 설정 ----
+function settingsHTML(){
+  const c = (adminData && adminData.config) || {};
+  return `
+  <div class="aform">
+    <h3>조회 페이지 문구</h3>
+    <div class="fld">
+      <label for="s-kicker">작은 제목</label>
+      <input id="s-kicker" type="text" value="${esc(c.kicker || "")}" placeholder="3차 지사 면접">
+    </div>
+    <div class="fld">
+      <label for="s-title">큰 제목</label>
+      <input id="s-title" type="text" value="${esc(c.title || "")}" placeholder="면접 일정 신청">
+    </div>
+    <div class="fld">
+      <label for="s-lede">검색창 위 한 줄</label>
+      <input id="s-lede" type="text" value="${esc(c.lede || "")}" placeholder="성함 또는 활동명으로 조회하세요.">
+      <p class="hintx">한 줄에 들어가야 하니 25자 안쪽을 권합니다.</p>
+    </div>
+    <div class="fld">
+      <label for="s-notice">신청 안내 문구</label>
+      <input id="s-notice" type="text" value="${esc(c.notice || "")}" placeholder="선택하신 두 일정 중 하나로 확정되며…">
+    </div>
+    <p class="aerrbox" id="s-err" hidden></p>
+    <div class="abtns">
+      <button type="button" class="go2" id="s-save">저장</button>
+    </div>
+  </div>
+
+  <div class="aform">
+    <h3>지난 기수 보관</h3>
+    <p class="hintx" style="margin:0 0 13px">명단 · 지사 신청 · 조회 기록을 별도 탭으로 옮기고 비웁니다. 보관한 내용은 시트에 그대로 남습니다. 면접 일정 신청(예약)은 건드리지 않습니다.</p>
+    <div class="fld">
+      <label for="s-label">보관 이름</label>
+      <input id="s-label" type="text" placeholder="2기">
+      <p class="hintx">예: 2기 → "명단 2기", "합격 2기" 탭이 생깁니다.</p>
+    </div>
+    <p class="aerrbox" id="s-aerr" hidden></p>
+    <div class="abtns">
+      <button type="button" class="go2" id="s-arch">보관하고 비우기</button>
+    </div>
+  </div>`;
+}
+
+function bindSettings(){
+  const save = $("#s-save");
+  if (save) save.addEventListener("click", async () => {
+    const err = $("#s-err");
+    err.hidden = true;
+    save.disabled = true; save.textContent = "저장 중…";
+    try {
+      const r = await adminCall("config", {
+        kicker: $("#s-kicker").value.trim(),
+        title: $("#s-title").value.trim(),
+        lede: $("#s-lede").value.trim(),
+        notice: $("#s-notice").value.trim()
+      });
+      if (!r || r.ok !== true) throw new Error((r && r.error) || "저장하지 못했습니다.");
+      adminData.config = r.config;
+      applyConfig(r.config);
+      if (slotData){ slotData.config = r.config; paintBooking(); }
+      save.disabled = false; save.textContent = "저장됨";
+      setTimeout(() => { if ($("#s-save")) $("#s-save").textContent = "저장"; }, 1600);
+    } catch (e) {
+      save.disabled = false; save.textContent = "저장";
+      err.textContent = String(e.message || e); err.hidden = false;
+    }
+  });
+
+  const arch = $("#s-arch");
+  if (arch) arch.addEventListener("click", async () => {
+    const err = $("#s-aerr");
+    err.hidden = true;
+    const label = $("#s-label").value.trim();
+    if (!label){ err.textContent = "보관 이름을 입력해 주세요."; err.hidden = false; return; }
+    if (!window.confirm(`명단·지사 신청·조회 기록을 "${label}" 탭으로 옮기고 비웁니다.\n계속할까요?`)) return;
+    arch.disabled = true; arch.textContent = "보관 중…";
+    try {
+      const r = await adminCall("archive", { label: label });
+      if (!r || r.ok !== true) throw new Error((r && r.error) || "보관하지 못했습니다.");
+      window.alert(`보관했습니다.\n${(r.moved || []).join("\n")}`);
+      await refreshAdmin();
+    } catch (e) {
+      arch.disabled = false; arch.textContent = "보관하고 비우기";
+      err.textContent = String(e.message || e); err.hidden = false;
+    }
+  });
 }
 
 async function openAdmin(){
@@ -2213,6 +2777,8 @@ function bindAdmin(){
 
   bindSubRows();
   renderSubBar();
+  bindBooks();
+  bindSettings();
   bindRows();
 }
 
@@ -2243,10 +2809,13 @@ $("#home").addEventListener("click", () => {
   $("#result").innerHTML = "";
   candidates = [];
   current = null;
+  picked = [];
+  paintBooking();
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
 loadRoster();   // 서버 명단으로 덮어쓴다. 실패해도 내장 명단으로 동작한다.
+loadSlots();    // 면접 일정 신청 화면
 
 $("#go").addEventListener("click", search);
 $("#q").addEventListener("keydown", e => { if (e.key === "Enter") search(); });
