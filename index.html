@@ -2634,9 +2634,29 @@ async function bulkStatus(status){
   bar.innerHTML = `<div class="selbar"><span>처리 중…</span></div>`;
   try {
     const r = await adminCall("bulkstatus", { rows: rows.join(","), status: status });
-    if (r && r.ok){ adminData.people = r.people; selected.clear(); repaintPanel(); }
-    else renderSelbar();
-  } catch (e) { renderSelbar(); }
+    if (r && r.ok && Array.isArray(r.people)){
+      adminData.people = r.people;
+      selected.clear();
+      repaintPanel();
+      return;
+    }
+    renderSelbar();
+    window.alert(adminFail(r, "상태를 바꾸지 못했습니다."));
+  } catch (e) {
+    renderSelbar();
+    window.alert("서버에 연결하지 못했습니다. 잠시 후 다시 시도해 주세요.");
+  }
+}
+
+// 서버가 왜 거절했는지 사람이 읽을 수 있게 만든다
+function adminFail(r, fallback){
+  if (!r) return fallback + "\n(서버 응답 없음)";
+  if (r.auth === false) return "로그인이 만료되었습니다. 창을 닫았다 다시 열어 주세요.";
+  if (r.error) return fallback + "\n" + r.error;
+  if (r.ok && !Array.isArray(r.people)){
+    return fallback + "\n서버가 이 기능을 모릅니다. Apps Script가 예전 버전인지 확인해 주세요.";
+  }
+  return fallback;
 }
 
 function bindRows(){
@@ -2651,9 +2671,13 @@ function bindRows(){
     sel.disabled = true;
     try {
       const r = await adminCall("status", { row: sel.dataset.status, status: sel.value });
-      if (r && r.ok){ adminData.people = r.people; repaintPanel(); }
-      else sel.disabled = false;
-    } catch (e) { sel.disabled = false; }
+      if (r && r.ok && Array.isArray(r.people)){ adminData.people = r.people; repaintPanel(); return; }
+      sel.disabled = false;
+      window.alert(adminFail(r, "상태를 바꾸지 못했습니다."));
+    } catch (e) {
+      sel.disabled = false;
+      window.alert("서버에 연결하지 못했습니다. 잠시 후 다시 시도해 주세요.");
+    }
   }));
 
   $$("[data-edit]").forEach(b => b.addEventListener("click", () => {
@@ -2667,8 +2691,13 @@ function bindRows(){
     b.disabled = true;
     try {
       const r = await adminCall("del", { row: b.dataset.del });
-      if (r && r.ok){ adminData.people = r.people; repaintPanel(); } else b.disabled = false;
-    } catch (e) { b.disabled = false; }
+      if (r && r.ok && Array.isArray(r.people)){ adminData.people = r.people; repaintPanel(); return; }
+      b.disabled = false;
+      window.alert(adminFail(r, "삭제하지 못했습니다."));
+    } catch (e) {
+      b.disabled = false;
+      window.alert("서버에 연결하지 못했습니다. 잠시 후 다시 시도해 주세요.");
+    }
   }));
 }
 
