@@ -27,6 +27,7 @@
     --maxw:560px;
   }
   *{box-sizing:border-box}
+  [hidden]{display:none !important}
   html,body{margin:0;padding:0}
   body{
     background:var(--black);
@@ -422,6 +423,36 @@
   .recap .k{flex:0 0 96px;color:var(--silver-3);font-size:.86rem}
   .recap .v{flex:1;min-width:0;word-break:break-all}
 
+  /* ---------- 첫 화면 메뉴 ---------- */
+  .menu{display:flex;flex-direction:column;gap:9px;margin-top:30px}
+  .tile{
+    display:block;width:100%;text-align:left;padding:21px 22px;border-radius:3px;
+    background:var(--panel);border:1px solid var(--hair-soft);color:var(--white);
+    position:relative;transition:border-color .15s ease,background .15s ease;
+  }
+  .tile:hover{border-color:var(--silver-3);background:var(--panel-2)}
+  .tile:focus-visible{outline:2px solid var(--silver);outline-offset:3px}
+  .tile b{display:block;font-size:1.06rem;font-weight:600;letter-spacing:-0.02em}
+  .tile span{display:block;margin-top:5px;color:var(--silver-2);font-size:.88rem;line-height:1.6}
+  .tile:after{
+    content:"";position:absolute;right:22px;top:50%;width:8px;height:8px;
+    border-right:1px solid var(--silver-3);border-top:1px solid var(--silver-3);
+    transform:translateY(-50%) rotate(45deg);transition:border-color .15s ease;
+  }
+  .tile:hover:after{border-color:var(--white)}
+
+  .back{
+    display:inline-flex;align-items:center;gap:7px;margin:26px 0 0;padding:9px 14px 9px 11px;
+    background:transparent;border:1px solid var(--hair-soft);border-radius:999px;
+    color:var(--silver-2);font-size:.85rem;
+    transition:border-color .15s ease,color .15s ease;
+  }
+  .back:hover{border-color:var(--silver-3);color:var(--white)}
+  .back:focus-visible{outline:2px solid var(--silver);outline-offset:2px}
+  .back i{font-style:normal;font-size:.95rem;line-height:1}
+  .modetitle{margin:17px 0 0;font-size:1.3rem;font-weight:300;letter-spacing:-0.03em}
+  .modedesc{margin:7px 0 0;color:var(--silver-2);font-size:.9rem;line-height:1.7}
+
   /* ---------- 면접 일정 신청 ---------- */
   #booking.hide{display:none}
   .bk{margin-top:32px}
@@ -744,7 +775,7 @@
 
   .brw{padding:13px 2px;border-bottom:1px solid var(--line2)}
   .brw:hover{background:var(--soft)}
-  .brw .bi{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font-size:.93rem}
+  .brw .bi{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:.93rem}
   .brw .bi b{font-weight:700}
   .brw .bi span{color:var(--ink3);font-size:.85rem}
   .brw .bi .cg{
@@ -874,18 +905,18 @@
     <h1>면접 일정 신청</h1>
     <p class="lede">성함 또는 활동명으로 조회하세요.</p>
 
-    <div class="search">
+    <div class="search" id="searchwrap">
       <div class="field">
         <label for="q" class="sr">성함 혹은 활동명</label>
         <input id="q" type="text" placeholder="성함 혹은 활동명" autocomplete="off" spellcheck="false" enterkeyhint="search">
       </div>
       <button class="go" id="go">조회</button>
     </div>
-    <p class="hint">띄어쓰기는 없어도 조회됩니다. (예 : 알스터, 알스터 류이슬, 알스터류이슬 모두 가능)</p>
+    <p class="hint" id="hint">띄어쓰기는 없어도 조회됩니다. (예 : 알스터, 알스터 류이슬, 알스터류이슬 모두 가능)</p>
   </header>
 
-  <main id="result" aria-live="polite"></main>
   <section id="booking"></section>
+  <main id="result" aria-live="polite"></main>
 </div>
 
 <section class="contact">
@@ -1591,10 +1622,13 @@ function cardHTML(p){
 }
 
 function missHTML(q){
+  const sched = mode === "sched";
   return `
   <div class="miss reveal">
-    <h2>“${esc(q)}” 님의 신청 내역이 없습니다</h2>
-    <p>아직 신청 전이시라면 아래에서 면접 일정을 신청해 주세요. 이미 신청하셨다면 이름의 띄어쓰기나 오타를 확인해 주시고, 그래도 안 되면 카카오톡으로 알려주세요.</p>
+    <h2>“${esc(q)}” 님의 ${sched ? "신청 내역을" : "결과를"} 찾지 못했습니다</h2>
+    <p>${sched
+      ? "아직 신청 전이시라면 처음 화면에서 <b>면접 일정 신청</b>을 눌러 주세요. 이미 신청하셨다면 이름의 띄어쓰기나 오타를 확인해 주시고, 그래도 안 되면 카카오톡으로 알려주세요."
+      : "이름의 띄어쓰기나 오타를 확인해 주세요. 결과가 아직 발표 전일 수도 있습니다. 그래도 조회되지 않으면 카카오톡으로 알려주시면 확인해 드리겠습니다."}</p>
     <a class="ghost" href="${KAKAO}" target="_blank" rel="noopener">카카오톡으로 문의하기</a>
   </div>`;
 }
@@ -1603,11 +1637,6 @@ function missHTML(q){
 function renderMiss(raw){
   $("#result").innerHTML = missHTML(raw);
   bind();
-  showBooking(true);
-  const n = $("#k-name");
-  if (n && !n.value.trim()) n.value = raw;
-  const bk = $("#booking");
-  if (bk) bk.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function pickHTML(list){
@@ -1622,12 +1651,7 @@ function pickHTML(list){
 }
 
 let candidates = [];
-function showBooking(on){
-  const el = $("#booking");
-  if (el) el.classList.toggle("hide", !on);
-}
-
-function render(html){ $("#result").innerHTML = html; bind(); showBooking(false); }
+function render(html){ $("#result").innerHTML = html; bind(); }
 // 상단 문구는 관리자 페이지에서 기수마다 바꿀 수 있다
 function applyConfig(c){
   if (!c) return;
@@ -1736,15 +1760,15 @@ function renderPerson(p){
   const st = p.status || (p.pass ? "합격" : "대기");
   const hasSchedule = validDate(p.date) && p.h;
   let html;
-  if (st === "면접예정"){
-    // 면접 전이므로 일정 카드만 보여준다 (장소·도착 안내·FAQ 포함)
+  if (mode === "sched"){
+    // 일정 확인: 장소·도착 안내·FAQ 가 들어간 일정 카드
     html = hasSchedule ? cardHTML(p) : noScheduleHTML(p);
   } else if (st === "합격"){
     html = passHTML(p) + (hasSchedule ? cardHTML(p) : "");
   } else if (st === "불합격"){
-    html = rejectedHTML(p);           // 결과가 나온 뒤엔 지난 일정을 다시 띄우지 않는다
+    html = rejectedHTML(p);
   } else {
-    html = notYetHTML(p) + (hasSchedule ? cardHTML(p) : "");
+    html = notYetHTML(p);             // 면접예정 · 대기 → 결과 준비 중
   }
   render(html);
 }
@@ -1804,12 +1828,79 @@ function search(){
   if (hits.length === 1){ renderPerson(hits[0]); return; }
   if (hits.length > 1){ candidates = hits; render(pickHTML(hits)); return; }
 
-  // 명단에 없으면 신청 내역을 찾아본다
+  if (mode === "result"){ renderMiss(raw); return; }
+
+  // 일정 확인에서는 명단에 없으면 신청 내역을 찾아본다
   render(`<p class="amsg" style="color:var(--silver-3);padding:32px 0;text-align:center">찾는 중…</p>`);
   lookupBooking(raw).then(b => {
     if (b) render(bookDoneHTML(b, false));
     else renderMiss(raw);
   });
+}
+
+// ============ 첫 화면 / 모드 ============
+let mode = "menu";          // menu | book | sched | result
+
+const MODES = {
+  book:   { t: "면접 일정 신청", d: "가능한 일정 2개를 선택해 신청하시면, 그중 하나로 확정해 안내드립니다." },
+  sched:  { t: "면접 일정 확인", d: "성함 또는 활동명으로 신청하신 일정과 확정 여부를 확인하실 수 있습니다." },
+  result: { t: "합격 확인",     d: "성함 또는 활동명으로 면접 결과와 이후 안내를 확인하실 수 있습니다." }
+};
+
+function menuHTML(){
+  const tile = (m, k) => `
+    <button class="tile" type="button" data-mode="${k}">
+      <b>${esc(m.t)}</b><span>${esc(m.d)}</span>
+    </button>`;
+  return `<div class="menu reveal">
+    ${tile(MODES.book, "book")}${tile(MODES.sched, "sched")}${tile(MODES.result, "result")}
+  </div>`;
+}
+
+function modeHeadHTML(k){
+  const m = MODES[k];
+  return `
+    <button class="back" type="button" id="goback"><i>←</i>처음으로</button>
+    <h2 class="modetitle">${esc(m.t)}</h2>
+    <p class="modedesc">${esc(m.d)}</p>`;
+}
+
+function setMode(k){
+  mode = k;
+  candidates = [];
+  current = null;
+  $("#result").innerHTML = "";
+  const sw = $("#searchwrap"), hint = $("#hint"), bk = $("#booking");
+  const search = (k === "sched" || k === "result");
+  sw.hidden = !search;
+  hint.hidden = !search;
+  if (search) $("#q").value = "";
+
+  if (k === "menu"){
+    bk.innerHTML = menuHTML();
+  } else if (k === "book"){
+    picked = [];
+    bk.innerHTML = modeHeadHTML(k) + (slotData ? bookingHTML() : downHTML());
+  } else {
+    bk.innerHTML = modeHeadHTML(k);
+  }
+  bindMode();
+  if (k === "book" && slotData) bindBooking();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function bindMode(){
+  $$("[data-mode]").forEach(b => b.addEventListener("click", () => setMode(b.dataset.mode)));
+  const back = $("#goback");
+  if (back) back.addEventListener("click", () => setMode("menu"));
+}
+
+function downHTML(){
+  return `
+    <div class="bk reveal"><div class="lead">
+      <h2>면접 일정 신청</h2>
+      <p>지금은 신청을 받을 수 없습니다. 잠시 후 다시 시도해 주시고, 계속 안 되면 아래 카카오톡으로 알려주세요.</p>
+    </div></div>`;
 }
 
 // ============ 면접 일정 신청 ============
@@ -1836,26 +1927,15 @@ function fmtSlot(key){
   return `${fmtDay(parts[0])} ${dayOf(parts[0])} ${hourLabel(Number(parts[1]))}`;
 }
 
-// 일정표를 못 받아왔을 때 빈 화면 대신 사정을 알린다
-function bookingDown(){
-  const el = $("#booking");
-  if (!el || el.innerHTML) return;
-  el.innerHTML = `
-    <div class="bk reveal"><div class="lead">
-      <h2>면접 일정 신청</h2>
-      <p>지금은 신청을 받을 수 없습니다. 잠시 후 다시 시도해 주시고, 계속 안 되면 아래 카카오톡으로 알려주세요.</p>
-    </div></div>`;
-}
-
 async function loadSlots(){
   if (!LOG_URL) return;
   try {
     const r = await jsonp(LOG_URL, { type: "slots" }, 15000);
-    if (!r || !r.ok || !Array.isArray(r.board)){ bookingDown(); return; }
+    if (!r || !r.ok || !Array.isArray(r.board)){ if (mode === "book") setMode("book"); return; }
     slotData = r;
     applyConfig(r.config);
-    paintBooking();
-  } catch (e) { bookingDown(); }
+    if (mode === "book") setMode("book");
+  } catch (e) { if (mode === "book") setMode("book"); }
 }
 
 function leftOf(key){
@@ -1970,13 +2050,6 @@ function bookDoneHTML(b, justSent){
   </div>`;
 }
 
-function paintBooking(){
-  const el = $("#booking");
-  if (!el || !slotData) return;
-  el.innerHTML = bookingHTML();
-  bindBooking();
-}
-
 function repaintGrid(){
   const g = $("#grid");
   if (g){ g.innerHTML = slotGridHTML(); bindSlots(); }
@@ -2040,7 +2113,8 @@ function bindBooking(){
       }
       const b = { name: name, alias: $("#k-alias").value.trim(),
                   p1: picked[0], p2: picked[1], fixed: "" };
-      $("#booking").innerHTML = "";
+      $("#booking").innerHTML = modeHeadHTML("book");
+      bindMode();
       render(bookDoneHTML(b, true));
       $("#result").scrollIntoView({ behavior: "smooth", block: "start" });
     } catch (e3) {
@@ -2066,6 +2140,7 @@ let aQuery = "";
 let aFilter = "전체";
 let selected = new Set();
 let selectedSub = new Set();
+let selectedBook = new Set();
 const STATUSES = ["면접예정", "대기", "합격", "불합격"];
 
 function adminPw(){ try { return sessionStorage.getItem("abyss-adm") || ""; } catch (e) { return ""; } }
@@ -2434,9 +2509,13 @@ function booksHTML(){
     ${statsHTML()}
     ${boardHTML()}
     <p class="acount" style="margin-top:20px">신청 ${list.length}명 · 확정 ${fixedN}명 · 미확정 ${list.length - fixedN}명</p>
+    ${list.length ? `<div class="tools">
+      <label class="selall"><input type="checkbox" class="ck" id="selallbook"> 전체 선택</label>
+    </div><div id="selbarbook"></div>` : ""}
     ${list.length ? list.map(b => `
       <div class="brw">
         <div class="bi">
+          <input type="checkbox" class="ck" data-pickbook="${b.row}"${selectedBook.has(b.row) ? " checked" : ""} aria-label="${esc(b.name)} 선택">
           <b>${esc(b.name)}</b>${b.alias ? `<span>${esc(b.alias)}</span>` : ""}
           ${b.cohort ? `<span class="cg">${esc(b.cohort)}</span>` : ""}
           <span class="at2">${esc(b.at)}</span>
@@ -2452,7 +2531,56 @@ function booksHTML(){
       </div>`).join("") : `<p class="amsg">아직 신청이 없습니다.</p>`}`;
 }
 
+function renderBookBar(){
+  const bar = $("#selbarbook");
+  if (!bar) return;
+  if (!selectedBook.size){ bar.innerHTML = ""; return; }
+  bar.innerHTML = `
+    <div class="selbar">
+      <span><b>${selectedBook.size}건</b> 선택됨</span>
+      <span class="sp"></span>
+      <button type="button" class="g2" id="bkdel">삭제</button>
+      <button type="button" class="g2" id="bkclear">선택 해제</button>
+    </div>`;
+  $("#bkclear").addEventListener("click", () => { selectedBook.clear(); repaintPanel(); });
+  $("#bkdel").addEventListener("click", async () => {
+    const rows = [...selectedBook];
+    if (!window.confirm(`선택한 ${rows.length}건을 삭제할까요?\n삭제하면 그 분이 잡아둔 자리가 풀립니다.`)) return;
+    bar.innerHTML = `<div class="selbar"><span>삭제 중…</span></div>`;
+    try {
+      const r = await adminCall("delbooks", { rows: rows.join(",") });
+      if (r && r.ok){ selectedBook.clear(); await refreshAdmin(); return; }
+      renderBookBar();
+      window.alert(adminFail(r, "삭제하지 못했습니다."));
+    } catch (e) {
+      renderBookBar();
+      window.alert("서버에 연결하지 못했습니다. 잠시 후 다시 시도해 주세요.");
+    }
+  });
+}
+
 function bindBooks(){
+  $$("[data-pickbook]").forEach(ck => ck.addEventListener("change", () => {
+    const n = Number(ck.dataset.pickbook);
+    ck.checked ? selectedBook.add(n) : selectedBook.delete(n);
+    renderBookBar();
+    const all = $("#selallbook");
+    if (all){
+      const bl = (adminData && adminData.books) || [];
+      all.checked = bl.length > 0 && bl.every(x => selectedBook.has(x.row));
+      all.indeterminate = !all.checked && bl.some(x => selectedBook.has(x.row));
+    }
+  }));
+
+  const all = $("#selallbook");
+  if (all) all.addEventListener("change", () => {
+    ((adminData && adminData.books) || []).forEach(x =>
+      all.checked ? selectedBook.add(x.row) : selectedBook.delete(x.row));
+    repaintPanel();
+  });
+
+  renderBookBar();
+
   $$("[data-fix]").forEach(b => b.addEventListener("click", async () => {
     const slot = b.dataset.slot;
     const who = ((adminData.books || []).filter(x => String(x.row) === String(b.dataset.fix))[0] || {}).name || "";
@@ -2535,7 +2663,7 @@ function bindSettings(){
       if (!r || r.ok !== true) throw new Error((r && r.error) || "저장하지 못했습니다.");
       adminData.config = r.config;
       applyConfig(r.config);
-      if (slotData){ slotData.config = r.config; paintBooking(); }
+      if (slotData) slotData.config = r.config;
       save.disabled = false; save.textContent = "저장됨";
       setTimeout(() => { if ($("#s-save")) $("#s-save").textContent = "저장"; }, 1600);
     } catch (e) {
@@ -2726,7 +2854,7 @@ function bindAdmin(){
   }
 
   $$(".atabs button").forEach(b => b.addEventListener("click", () => {
-    adminTab = b.dataset.tab; editing = null; selected.clear(); selectedSub.clear();
+    adminTab = b.dataset.tab; editing = null; selected.clear(); selectedSub.clear(); selectedBook.clear();
     adminBody(panelHTML()); bindAdmin();
   }));
 
@@ -2866,14 +2994,13 @@ $("#home").addEventListener("click", () => {
   $("#result").innerHTML = "";
   candidates = [];
   current = null;
-  picked = [];
-  paintBooking();
-  showBooking(true);
+  setMode("menu");
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
+setMode("menu");
 loadRoster();   // 서버 명단으로 덮어쓴다. 실패해도 내장 명단으로 동작한다.
-loadSlots();    // 면접 일정 신청 화면
+loadSlots();    // 면접 일정표
 
 $("#go").addEventListener("click", search);
 $("#q").addEventListener("keydown", e => { if (e.key === "Enter") search(); });
