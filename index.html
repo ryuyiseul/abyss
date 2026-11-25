@@ -772,6 +772,10 @@
   .brow .bc:last-child{border-right:none}
   .brow .bc.p{background:var(--waitbg);color:var(--wait);font-weight:600}
   .brow .bc.f{background:var(--nobg);color:var(--no);font-weight:700}
+  .brow .bc.done{
+    background:var(--ink);color:#fff;font-weight:700;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
 
   .brw{padding:13px 2px;border-bottom:1px solid var(--line2)}
   .brw:hover{background:var(--soft)}
@@ -795,6 +799,11 @@
   .pk:hover{border-color:var(--ink3)}
   .pk.on{background:var(--ink);border-color:var(--ink);color:#fff;font-weight:600}
   .pk.on em{color:rgba(255,255,255,.65)}
+  .pk.clash{background:var(--nobg);border-color:#E0B3B0;color:var(--no)}
+  .pk.clash em{color:var(--no);font-weight:600}
+  .pk.clash:hover{border-color:var(--no)}
+  .pk.on.clash{background:var(--ink);border-color:var(--ink);color:#fff}
+  .pk.on.clash em{color:#F0B8B4}
 
   /* 지사 신청 (한 줄) */
   .shead, .srow{display:flex;align-items:center;gap:10px;padding:9px 2px}
@@ -1118,6 +1127,8 @@ const FAQ_BOOKED = [
     <p><strong>경기도 김포시 태장로 789</strong> 금광하이테크시티 <strong>759호</strong>입니다.</p>
     <p>자세한 위치는 아래 지도를 확인해 주세요.</p>
     <p><a class="ghost" href="${MAP_URL}" target="_blank" rel="noopener">지도에서 위치 보기</a></p>`],
+  ["주차할 수 있나요?", `
+    <p>주차 가능합니다. <strong>1시간까지 주차 지원</strong>해 드리니 차량으로 오셔도 괜찮습니다.</p>`],
   ...FAQ_KIT
 ];
 
@@ -2478,11 +2489,19 @@ function boardLeft(k){
   return b ? Math.max(0, (adminData.cap || 2) - b.taken) : 0;
 }
 
+// 이미 면접이 확정된 칸 → { "2026-12-01|11": "김하나" }
+function confirmedMap(){
+  const m = {};
+  ((adminData && adminData.books) || []).forEach(b => { if (b.fixed) m[b.fixed] = b.name; });
+  return m;
+}
+
 function boardHTML(){
   const dates = adminData.dates || [], hours = adminData.hours || [];
   if (!dates.length) return "";
+  const fixedBy = confirmedMap();
   return `
-    <p class="acount">타임별 신청 현황 — 칸당 ${adminData.cap || 2}명</p>
+    <p class="acount">타임별 현황 — 칸당 신청 ${adminData.cap || 2}명, 확정은 한 명만</p>
     <div class="bgrid">
       <div class="brow bhead"><span class="bd"></span>${hours.map(h => `<span class="bc">${esc(hourLabel(h))}</span>`).join("")}</div>
       ${dates.map(d => `
@@ -2490,6 +2509,7 @@ function boardHTML(){
           <span class="bd">${esc(fmtDay(d))}<em>${esc(dayOf(d))}</em></span>
           ${hours.map(h => {
             const k = d + "|" + h;
+            if (fixedBy[k]) return `<span class="bc done" title="${esc(fixedBy[k])} 확정">${esc(fixedBy[k])}</span>`;
             const left = boardLeft(k);
             const cap = adminData.cap || 2;
             const cls = left === 0 ? "f" : (left < cap ? "p" : "");
@@ -2502,6 +2522,7 @@ function boardHTML(){
 function booksHTML(){
   const list = (adminData && adminData.books) || [];
   const fixedN = list.filter(x => x.fixed).length;
+  const fixedBy = confirmedMap();
   return `
     ${statsHTML()}
     ${boardHTML()}
@@ -2519,10 +2540,15 @@ function booksHTML(){
           <span class="meta">${esc(b.phone)}</span>
         </div>
         <div class="bpick">
-          ${[b.p1, b.p2].filter(Boolean).map((k, i) => `
-            <button type="button" class="pk${b.fixed === k ? " on" : ""}" data-fix="${b.row}" data-slot="${k}">
-              <em>${i + 1}지망</em>${esc(fmtSlot(k))}
-            </button>`).join("")}
+          ${[b.p1, b.p2].filter(Boolean).map((k, i) => {
+            const by = fixedBy[k];
+            const clash = by && by !== b.name;      // 그 시간에 이미 다른 사람이 확정됨
+            return `
+            <button type="button" class="pk${b.fixed === k ? " on" : ""}${clash ? " clash" : ""}"
+                    data-fix="${b.row}" data-slot="${k}"${clash ? ` data-by="${esc(by)}"` : ""}>
+              <em>${i + 1}지망${clash ? ` · ${esc(by)} 님 확정됨` : ""}</em>${esc(fmtSlot(k))}
+            </button>`;
+          }).join("")}
           ${b.fixed ? `<button type="button" class="mini" data-fix="${b.row}" data-slot="">확정 해제</button>` : ""}
         </div>
       </div>`).join("") : `<p class="amsg">아직 신청이 없습니다.</p>`}`;
@@ -2581,7 +2607,10 @@ function bindBooks(){
   $$("[data-fix]").forEach(b => b.addEventListener("click", async () => {
     const slot = b.dataset.slot;
     const who = ((adminData.books || []).filter(x => String(x.row) === String(b.dataset.fix))[0] || {}).name || "";
-    if (slot && !window.confirm(`${who} 님의 면접을\n${fmtSlot(slot)}\n으로 확정할까요?`)) return;
+    const by = b.dataset.by;
+    if (slot && by){
+      if (!window.confirm(`${fmtSlot(slot)}\n이 시간에는 이미 ${by} 님이 확정되어 있습니다.\n\n${who} 님까지 같은 시간에 배정하면 두 분이 겹칩니다.\n그래도 확정할까요?`)) return;
+    } else if (slot && !window.confirm(`${who} 님의 면접을\n${fmtSlot(slot)}\n으로 확정할까요?`)) return;
     if (!slot && !window.confirm(`${who} 님의 확정을 해제할까요?`)) return;
     b.disabled = true;
     try {
