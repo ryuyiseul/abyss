@@ -138,6 +138,29 @@
   .ghost:focus-visible{outline:2px solid var(--silver);outline-offset:2px}
 
   .sec{padding:24px;border-top:1px solid var(--hair-soft)}
+  .atthint{margin:8px 0 0;font-size:.9rem;color:var(--silver-2);line-height:1.6}
+  .atthint a{color:var(--silver);text-decoration:underline;text-underline-offset:2px}
+  .attbtn{
+    width:100%;margin-top:14px;padding:14px 16px;min-height:50px;
+    background:var(--white);border:1px solid var(--white);color:var(--black);
+    font:inherit;font-size:.95rem;font-weight:600;letter-spacing:-0.01em;cursor:pointer;
+    transition:opacity .15s ease;
+  }
+  .attbtn:hover{opacity:.86}
+  .attbtn:disabled{opacity:.5;cursor:default}
+  .attbtn:focus-visible{outline:2px solid var(--silver);outline-offset:2px}
+  .attdone{
+    margin-top:12px;padding:13px 15px;background:var(--panel-2);
+    border:1px solid var(--hair);display:flex;flex-wrap:wrap;
+    align-items:baseline;gap:4px 10px;
+  }
+  .attdone b{color:var(--white);font-size:.94rem;font-weight:600}
+  .attdone span{color:var(--silver-2);font-size:.85rem}
+  .atterr{
+    margin:12px 0 0;padding:11px 13px;background:var(--panel-2);
+    border:1px solid var(--hair);border-left:3px solid var(--silver-2);
+    color:var(--silver);font-size:.88rem;line-height:1.6;
+  }
   h2{font-size:.95rem;font-weight:600;margin:0 0 4px;letter-spacing:-0.02em}
   .steps{margin:18px 0 0;padding:0;list-style:none;position:relative}
   .steps:before{content:"";position:absolute;left:5px;top:9px;bottom:9px;width:1px;background:var(--hair)}
@@ -823,6 +846,15 @@
   .shead .c-nm,.shead .c-br,.shead .c-ph,.shead .c-bz{font-weight:400}
   .amsg{padding:34px 0;text-align:center;color:var(--ink3);font-size:.92rem}
   .acount{font-size:.85rem;color:var(--ink2);margin:0 0 12px}
+  .arow .attchip{
+    display:inline-flex;align-items:center;gap:4px;
+    margin-left:7px;padding:2px 8px;border-radius:999px;
+    background:var(--okbg);border:1px solid #BEE0C8;color:var(--ok);
+    font:inherit;font-size:.74rem;font-weight:600;line-height:1.7;cursor:pointer;
+  }
+  .arow .attchip:hover{border-color:var(--ok)}
+  .arow .attchip:disabled{opacity:.5;cursor:default}
+
   .aerrbox{
     margin:0 0 14px;padding:11px 13px;background:var(--nobg);border:1px solid #EFC9C6;
     border-radius:4px;color:var(--no);font-size:.88rem;
@@ -1632,9 +1664,63 @@ function cardHTML(p){
       </ol>
     </div>
 
+    ${attSecHTML(p)}
     ${faqHTML(faqBooked(p.date))}
     ${benefitBarHTML()}
   </div>`;
+}
+
+// 참석 확정. 일정이 지났거나 서버가 없으면 보여주지 않는다.
+function attSecHTML(p){
+  if (!LOG_URL) return "";
+  if (dday(p.date, p.h).past) return "";
+  return `<div class="sec" id="attsec">${attHTML(p)}</div>`;
+}
+
+function attHTML(p){
+  if (p.att) return `
+    <h2>참석 확정</h2>
+    <div class="attdone">
+      <b>참석을 확정하셨습니다</b>
+      <span>${esc(p.att)} 확정</span>
+    </div>
+    <p class="atthint">사정이 생기면 <a href="${KAKAO}" target="_blank" rel="noopener">카카오톡</a>으로 미리 알려주세요.</p>`;
+  return `
+    <h2>참석 확정</h2>
+    <p class="atthint">안내드린 일정에 참석하실 수 있으면 아래 버튼을 눌러주세요. 참석 여부를 미리 확인하기 위한 절차입니다.</p>
+    <button type="button" class="attbtn" id="attgo">이 일정으로 참석하겠습니다</button>
+    <p class="atterr" id="atterr" hidden></p>`;
+}
+
+function bindAttend(){
+  const btn = $("#attgo");
+  if (!btn || !current) return;
+  btn.addEventListener("click", async () => {
+    const err = $("#atterr");
+    if (err) err.hidden = true;
+    btn.disabled = true;
+    const label = btn.textContent;
+    btn.textContent = "확정하는 중…";
+    let r = null;
+    try { r = await jsonp(LOG_URL, { type: "attend", name: current.name }); }
+    catch (e) { r = null; }
+
+    if (r && r.ok){
+      current.att = r.att || "방금";
+      const hit = DATA.filter(x => x.name === current.name)[0];
+      if (hit) hit.att = current.att;
+      const sec = $("#attsec");
+      if (sec) sec.innerHTML = attHTML(current);
+      return;
+    }
+    btn.disabled = false;
+    btn.textContent = label;
+    if (err){
+      err.textContent = (r && r.error)
+        || "확정하지 못했습니다. 잠시 후 다시 시도해 주시고, 계속 안 되면 카카오톡으로 알려주세요.";
+      err.hidden = false;
+    }
+  });
 }
 
 function missHTML(q){
@@ -1791,6 +1877,7 @@ function renderPerson(p){
 
 function bind(){
   if (current) bindForm(current);
+  bindAttend();
   const copy = $("#copy");
   if (copy) copy.addEventListener("click", async () => {
     const text = ADDRESS + " " + placeOf(current && current.date);
@@ -2217,7 +2304,8 @@ function statsHTML(){
   const cell = (v, l) => `<div class="stat"><b>${v}</b><span>${l}</span></div>`;
   return `<div class="stats">
     ${cell(ppl.length, "전체")}${cell(n("면접예정"), "면접예정")}${cell(n("대기"), "대기")}
-    ${cell(n("합격"), "합격")}${cell(n("불합격"), "불합격")}${cell(((adminData && adminData.books) || []).length, "면접 신청")}
+    ${cell(n("합격"), "합격")}${cell(n("불합격"), "불합격")}
+    ${cell(ppl.filter(x => x.att).length, "참석 확정")}${cell(((adminData && adminData.books) || []).length, "면접 신청")}
   </div>`;
 }
 
@@ -2226,14 +2314,15 @@ function toolsHTML(){
   return `<div class="tools">
     <label class="selall"><input type="checkbox" class="ck" id="selall"> 전체 선택</label>
     <input id="asearch" type="text" placeholder="이름 또는 활동명 검색" value="${esc(aQuery)}" autocomplete="off">
-    <div class="chips">${["전체"].concat(STATUSES).map(chip).join("")}</div>
+    <div class="chips">${["전체"].concat(STATUSES).concat(["참석 확정"]).map(chip).join("")}</div>
   </div>`;
 }
 
 function visiblePeople(){
   const q = norm(aQuery);
   return ((adminData && adminData.people) || []).filter(x => {
-    if (aFilter !== "전체" && x.status !== aFilter) return false;
+    if (aFilter === "참석 확정") { if (!x.att) return false; }
+    else if (aFilter !== "전체" && x.status !== aFilter) return false;
     if (!q) return true;
     return norm(x.name).includes(q) || norm(x.alias).includes(q);
   });
@@ -2248,6 +2337,7 @@ function listHTML(){
       <span class="nm">
         <b>${esc(x.name)}</b>${x.alias ? `<span>${esc(x.alias)}</span>` : ""}
         ${x.date ? `<span class="meta">${esc(x.date)} ${esc(x.time)}</span>` : `<span class="meta">면접 일정 미정</span>`}
+        ${x.att ? `<button type="button" class="attchip" data-attclr="${x.row}" title="누르면 참석 확정을 해제합니다">참석 ${esc(x.att)}</button>` : ""}
       </span>
       <select class="sel s${x.status}" data-status="${x.row}" aria-label="${esc(x.name)} 상태">
         ${STATUSES.map(v => `<option value="${v}"${x.status === v ? " selected" : ""}>${v}</option>`).join("")}
@@ -2845,6 +2935,25 @@ function bindRows(){
   $$("[data-edit]").forEach(b => b.addEventListener("click", () => {
     editing = b.dataset.edit; repaintPanel();
     const f = $(".aform"); if (f) f.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }));
+
+  $$("[data-attclr]").forEach(b => b.addEventListener("click", async () => {
+    const who = (adminData.people.filter(x => String(x.row) === String(b.dataset.attclr))[0] || {}).name || "";
+    if (!window.confirm(`${who} 님의 참석 확정을 해제할까요?\n본인 화면에 참석 확정 버튼이 다시 나타납니다.`)) return;
+    b.disabled = true;
+    try {
+      const r = await adminCall("attclear", { row: b.dataset.attclr });
+      if (r && r.ok && Array.isArray(r.people)){
+        adminData.people = r.people; repaintPanel();
+        loadRoster();   // 조회 화면도 최신 명단으로
+        return;
+      }
+      b.disabled = false;
+      window.alert(adminFail(r, "해제하지 못했습니다."));
+    } catch (e) {
+      b.disabled = false;
+      window.alert("서버에 연결하지 못했습니다. 잠시 후 다시 시도해 주세요.");
+    }
   }));
 
   $$("[data-del]").forEach(b => b.addEventListener("click", async () => {
