@@ -127,13 +127,6 @@
   .row .k{flex:0 0 66px;font-size:.85rem;color:var(--silver-3);padding-top:2px}
   .row .v{flex:1;font-size:.95rem}
   .row .v .sub{color:var(--silver-2);font-size:.88rem;margin-top:2px}
-  .row .v .roomnote{
-    margin-top:8px;padding:8px 11px;border-radius:8px;
-    background:var(--panel-2);border:1px solid var(--hair);
-    border-left:3px solid var(--white);
-    color:var(--silver);font-size:.86rem;line-height:1.55;
-  }
-  .row .v .roomnote strong{color:var(--white);font-weight:700}
   .acts{display:flex;gap:8px;margin-top:13px;flex-wrap:wrap}
   .ghost{
     padding:11px 15px;min-height:44px;background:transparent;border:1px solid var(--hair);
@@ -1140,7 +1133,6 @@ function faqBooked(iso){ return [
     <p>앞뒤로 다른 분의 면접이 이어져 있어 대기 시간을 따로 확보하기 어렵습니다. 늦어질 것 같으면 미리 <a href="${KAKAO}" target="_blank" rel="noopener">카카오톡</a>으로 알려주세요.</p>`],
   ["오시는 길이 어떻게 되나요?", `
     <p><strong>경기도 김포시 태장로 789</strong> 금광하이테크시티 <strong>${roomOf(iso)}</strong>입니다.</p>
-    ${roomOf(iso) !== ROOM ? `<p>같은 건물이지만 <strong>${roomOf(iso)}</strong>로 오셔야 합니다. ${ROOM}가 아닌 점 꼭 확인해 주세요.</p>` : ""}
     <p>자세한 위치는 아래 지도를 확인해 주세요.</p>
     <p><a class="ghost" href="${MAP_URL}" target="_blank" rel="noopener">지도에서 위치 보기</a></p>`],
   ["주차할 수 있나요?", `
@@ -1619,9 +1611,6 @@ function cardHTML(p){
         <div class="v">
           ${ADDRESS}
           <div class="sub">${placeOf(p.date)}</div>
-          ${roomOf(p.date) !== ROOM
-            ? `<div class="roomnote">같은 건물 <strong>${roomOf(p.date)}</strong>입니다. ${ROOM}가 아닙니다.</div>`
-            : ""}
           <div class="acts">
             <a class="ghost" href="${mapUrl}" target="_blank" rel="noopener">지도에서 보기</a>
             <button class="ghost" type="button" id="copy">주소 복사</button>
